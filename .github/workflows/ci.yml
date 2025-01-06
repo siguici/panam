@@ -9,27 +9,77 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
-        node: [22]
-        pnpm: [9]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         experimental: [false]
-    name: 👷 Panam CI on Node-${{ matrix.node }} under ${{ matrix.os }}
+        runtime: [node, deno, bun]
+        version: ["latest"]
+        pm: [npm, pnpm, yarn]
+        exclude:
+          - runtime: bun
+            pm: pnpm
+          - runtime: bun
+            pm: yarn
+          - runtime: deno
+            pm: pnpm
+          - runtime: deno
+            pm: yarn
+    name: 👷 Panam CI on Node-${{ matrix.node }} under ${{ matrix.os }} using ${{ matrix.pm }}
 
     timeout-minutes: 60
 
     steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v4
+      - name: 🚚 Checkout repository
+        uses: actions/checkout@v3
 
-      - name: 🐳 Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
+      - name: 🔧 Setup runtime - ${{ matrix.runtime }}
+        run: |
+          case "${{ matrix.runtime }}" in
+            "node")
+              echo "🐳 Setting up Node.js ${matrix.version}"
+              actions/setup-node@v4 node-version=${{ matrix.version }}
+              ;;
+            "deno")
+              echo "🦕 Setting up Deno ${matrix.version}"
+              denoland/setup-deno@v2 deno-version=${{ matrix.version }}
+              ;;
+            "bun")
+              echo "🍞 Setting up Bun ${matrix.version}"
+              oven-sh/setup-bun@v2 bun-version=${{ matrix.version }}
+              ;;
+            *)
+              echo "❌ Invalid runtime specified."
+              exit 1
+              ;;
+          esac
+        shell: bash
 
-      - name: ⚡️ Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ matrix.pnpm }}
+      - name: 📦 Install dependencies
+        run: |
+          if [[ "${{ matrix.runtime }}" == "node" ]]; then
+            echo "⚙️ Installing ${{ matrix.pm }} dependencies"
+            corepack enable
+            corepack prepare ${{ matrix.pm }}@latest --activate
+            ${{ matrix.pm }} install
+          elif [[ "${{ matrix.runtime }}" == "deno" ]]; then
+            echo "⚙️ Installing Deno dependencies"
+            deno install
+          elif [[ "${{ matrix.runtime }}" == "bun" ]]; then
+            echo "⚙️ Installing Bun dependencies"
+            bun install
+          fi
+        shell: bash
 
-      - name: ✅ Install dependencies, check code & run unit tests
-        run: make test
+      - name: 🔍 Run tests
+        run: |
+          echo "🧪 Running tests for ${{ matrix.runtime }}..."
+          if [[ "${{ matrix.runtime }}" == "node" ]]; then
+            ${{ matrix.pm }} run test
+          elif [[ "${{ matrix.runtime }}" == "deno" ]]; then
+            deno task test
+          elif [[ "${{ matrix.runtime }}" == "bun" ]]; then
+            bun run test
+          fi
+        shell: bash
+
+      - name: 🎉 CI completed successfully!
+        run: echo "✅ All tests passed for ${{ matrix.runtime }} on ${{ matrix.os }} using ${{ matrix.pm }}!"
