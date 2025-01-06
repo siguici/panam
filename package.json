@@ -19,7 +19,8 @@
     "test": "NODE_ENV=test node --loader tsm --enable-source-maps bin/test.ts"
   },
   "author": "Sigui Kessé Emmanuel <siguici@proton.me>",
-  "repository": "git+https://github.com/github.com/panam.git",
+  "repository": "git+https://github.com/siguici/panam.git",
+  "homepage": "https://github.com/siguici/panam/tree/main#readme",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
