@@ -19,7 +19,7 @@ jobs:
         pnpm: [9]
         experimental: [false]
 
-    name: 🚀 Clixion CD on Node-${{ matrix.node }} with ${{ matrix.pnpm }} under ${{ matrix.os }}
+    name: 🚀 Panam CD on Node-${{ matrix.node }} with ${{ matrix.pnpm }} under ${{ matrix.os }}
 
     steps:
       - name: Checkout Repo

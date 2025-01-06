@@ -1,5 +1,5 @@
 {
-  "name": "panpm",
+  "name": "panam",
   "type": "module",
   "license": "MIT",
   "version": "0.0.0",
@@ -13,14 +13,13 @@
     "lint": "biome check --write .",
     "changeset": "changeset",
     "release": "changeset publish",
-    "test:clixion": "pnpm -C ./packages/clixion test",
     "prepare": "husky && gitmoji -i",
     "build": "pnpm check && tsup-node --env.NODE_ENV production",
     "start": "tsup-node --env.NODE_ENV development --watch",
     "test": "NODE_ENV=test node --loader tsm --enable-source-maps bin/test.ts"
   },
   "author": "Sigui Kessé Emmanuel <siguici@proton.me>",
-  "repository": "git+https://github.com/github.com/panpm.git",
+  "repository": "git+https://github.com/github.com/panam.git",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -31,17 +30,11 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
-    "./tester": {
-      "types": "./dist/tester.d.ts",
-      "import": "./dist/tester.js",
-      "require": "./dist/tester.cjs",
-      "default": "./dist/tester.js"
-    },
-    "./utils": {
-      "types": "./dist/utils.d.ts",
-      "import": "./dist/utils.js",
-      "require": "./dist/utils.cjs",
-      "default": "./dist/utils.js"
+    "./process": {
+      "types": "./dist/process.d.ts",
+      "import": "./dist/process.js",
+      "require": "./dist/process.cjs",
+      "default": "./dist/process.js"
     },
     "./package.json": "./package.json"
   },
@@ -53,18 +46,21 @@
     "crosspm",
     "cross-pm",
     "deno",
+    "node",
     "npm",
     "omnipm",
     "omni-pm",
     "package-manager",
+    "panam",
     "panpm",
+    "pan-pm",
     "pnpm",
     "yarn"
   ],
   "publishConfig": {
     "access": "public"
   },
-  "bugs": "https://github.com/siguici/panpm/issues",
+  "bugs": "https://github.com/siguici/panam/issues",
   "dependencies": {
     "cross-spawn": "^7.0.6",
     "which": "^5.0.0",

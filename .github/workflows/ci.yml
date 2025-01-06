@@ -13,7 +13,7 @@ jobs:
         node: [22]
         pnpm: [9]
         experimental: [false]
-    name: 👷 Clixion CI on Node-${{ matrix.node }} under ${{ matrix.os }}
+    name: 👷 Panam CI on Node-${{ matrix.node }} under ${{ matrix.os }}
 
     timeout-minutes: 60
 

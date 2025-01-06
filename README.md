@@ -1,4 +1,4 @@
-# PanPM
+# Panam
 
 A universal tool for executing commands across multiple package managers,
 independent of runtime or environment. Supporting popular tools
@@ -23,46 +23,46 @@ and intelligent fallback strategies.
 
 ## 📦 Installation
 
-Install PanPM globally using your preferred package manager:
+Install Panam globally using your preferred package manager:
 
 - **With `NPM`**:
 
   ```bash
-  npm install panpm
+  npm install panam
   ```
 
 - **With `Yarn`**:
 
   ```bash
-  yarn install panpm
+  yarn install panam
   ```
 
 - **With `PNPM`**:
 
   ```bash
-  pnpm install panpm
+  pnpm install panam
   ```
 
 - **With `Bun`**:
 
   ```bash
-  bun install panpm
+  bun install panam
   ```
 
 - **With `Deno`**:
 
   ```bash
-  deno install npm:panpm
+  deno install npm:panam
   ```
 
 ### 🧑‍💻 Usage
 
 #### Run a command
 
-PanPM automatically detects the active package manager for your project:
+Panam automatically detects the active package manager for your project:
 
 ```bash
-panpm install
+panam install
 ```
 
 #### Execute a script
@@ -70,15 +70,15 @@ panpm install
 Run a script defined in your package.json:
 
 ```bash
-panpm run <script-name>
+panam run <script-name>
 ```
 
 #### Use `exec` or `dlx`
 
-PanPM adapts commands like exec or dlx for compatibility across package managers:
+Panam adapts commands like exec or dlx for compatibility across package managers:
 
 ```bash
-panpm exec vite --template vue
+panam exec vite --template vue
 ```
 
 ### 💡 Examples
@@ -87,10 +87,10 @@ Yes
 
 ### 🛠️ Programmatic API
 
-PanPM also exposes a powerful programmatic API for advanced use cases:
+Panam also exposes a powerful programmatic API for advanced use cases:
 
 ```typescript
-import pm from 'panpm';
+import pm from 'panam';
 
 const version = await pm.version();
 console.log(`Current package manager version: ${version}`);
@@ -117,7 +117,7 @@ await pm.x('astro add @qwikdev/astro');
 
 ## 📖 Supported Package Managers
 
-PanPM currently supports the following package managers:
+Panam currently supports the following package managers:
 
 - ✅ npm
 - ✅ cnpm
@@ -130,7 +130,7 @@ More package managers can be added with ease.
 
 ## 📚 Documentation
 
-Go to [https://panpm.js.org](https://panpm.js.org) for more documentation and usage examples.
+Go to [https://panam.js.org](https://panam.js.org) for more documentation and usage examples.
 
 ## 🛡️ License
 
