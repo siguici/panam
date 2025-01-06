@@ -1,4 +1,4 @@
-name: Publish Any Commit
+name: PR
 on: [push, pull_request]
 
 jobs:
