@@ -1,0 +1,35 @@
+name: CI
+
+on: ['push', 'pull_request']
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        node: [22]
+        pnpm: [9]
+        experimental: [false]
+    name: 👷 Clixion CI on Node-${{ matrix.node }} under ${{ matrix.os }}
+
+    timeout-minutes: 60
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 🐳 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: ⚡️ Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ matrix.pnpm }}
+
+      - name: ✅ Install dependencies, check code & run unit tests
+        run: make test

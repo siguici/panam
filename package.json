@@ -1,0 +1,90 @@
+{
+  "name": "panpm",
+  "type": "module",
+  "license": "MIT",
+  "version": "0.0.0",
+  "description": "A universal command-line tool that simplifies running package manager commands across different environments (npm, cnpm, pnpm, yarn, bun, deno) with a unified interface.",
+  "scripts": {
+    "check": "tsc --noEmit && biome ci .",
+    "check:format": "biome format .",
+    "check:lint": "biome check .",
+    "fix": "pnpm lint && pnpm format",
+    "format": "biome format --write .",
+    "lint": "biome check --write .",
+    "changeset": "changeset",
+    "release": "changeset publish",
+    "test:clixion": "pnpm -C ./packages/clixion test",
+    "prepare": "husky && gitmoji -i",
+    "build": "pnpm check && tsup-node --env.NODE_ENV production",
+    "start": "tsup-node --env.NODE_ENV development --watch",
+    "test": "NODE_ENV=test node --loader tsm --enable-source-maps bin/test.ts"
+  },
+  "author": "Sigui Kessé Emmanuel <siguici@proton.me>",
+  "repository": "git+https://github.com/github.com/panpm.git",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./tester": {
+      "types": "./dist/tester.d.ts",
+      "import": "./dist/tester.js",
+      "require": "./dist/tester.cjs",
+      "default": "./dist/tester.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs",
+      "default": "./dist/utils.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "bun",
+    "ci",
+    "cli",
+    "cnpm",
+    "crosspm",
+    "cross-pm",
+    "deno",
+    "npm",
+    "omnipm",
+    "omni-pm",
+    "package-manager",
+    "panpm",
+    "pnpm",
+    "yarn"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": "https://github.com/siguici/panpm/issues",
+  "dependencies": {
+    "cross-spawn": "^7.0.6",
+    "which": "^5.0.0",
+    "which-pm-runs": "^1.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "^2.27.11",
+    "@japa/assert": "^4.0.0",
+    "@japa/runner": "^4.0.0",
+    "@types/cross-spawn": "^6.0.6",
+    "@types/node": "^22.10.5",
+    "@types/which": "^3.0.4",
+    "@types/which-pm-runs": "^1.0.2",
+    "gitmoji-cli": "^9.5.0",
+    "husky": "^9.1.7",
+    "pkg-pr-new": "^0.0.39",
+    "tslib": "^2.8.1",
+    "tsm": "^2.3.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
