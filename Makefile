@@ -22,7 +22,7 @@ test: build check
 	pnpm test
 
 pr-release: test
-	pnpx pkg-pr-new publish ./packages/*
+	pnpx pkg-pr-new publish
 
 release: test
 	pnpm release
