@@ -1,2 +1,2 @@
-make test
+make check
 git update-index --again
