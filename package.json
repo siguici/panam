@@ -16,7 +16,7 @@
     "prepare": "husky && gitmoji -i",
     "build": "pnpm check && tsup-node --env.NODE_ENV production",
     "start": "tsup-node --env.NODE_ENV development --watch",
-    "test": "NODE_ENV=test node --loader tsm --enable-source-maps bin/test.ts"
+    "test": "node --loader tsm --enable-source-maps bin/test.ts"
   },
   "author": "Sigui Kessé Emmanuel <siguici@proton.me>",
   "repository": "git+https://github.com/siguici/panam.git",
