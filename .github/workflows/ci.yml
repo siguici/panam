@@ -61,7 +61,11 @@ jobs:
             fi
             corepack enable
             corepack prepare ${{ matrix.pm }}@latest --activate
-            ${{ matrix.pm }} install
+            if [[ "${{ matrix.pm }}" == "npm" ]]; then
+              ${{ matrix.pm }} install --legacy-peer-deps
+            else
+              ${{ matrix.pm }} install
+            fi
             if [[ "${{ matrix.pm }}" == "yarn" ]]; then
               mv main-package.json package.json
             fi
