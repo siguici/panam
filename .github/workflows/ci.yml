@@ -53,18 +53,18 @@ jobs:
         run: |
           if [[ "${{ matrix.runtime }}" == "node" ]]; then
             echo "⚙️ Installing ${{ matrix.pm }} dependencies"
-            corepack enable
-            corepack prepare ${{ matrix.pm }}@latest --activate
             if [[ "${{ matrix.pm }}" == "yarn" ]]; then
               YARN_VERSION=$(yarn --version)
               jq ".packageManager = \"yarn@$YARN_VERSION\"" package.json > yarn-package.json
               mv package.json main-package.json
               mv yarn-package.json package.json
-              yarn install
-              mv main-package.json package.json
-              rm yarn-package.json
             fi
+            corepack enable
+            corepack prepare ${{ matrix.pm }}@latest --activate
             ${{ matrix.pm }} install
+            if [[ "${{ matrix.pm }}" == "yarn" ]]; then
+              mv main-package.json package.json
+            fi
           elif [[ "${{ matrix.runtime }}" == "deno" ]]; then
             echo "⚙️ Installing Deno dependencies"
             deno install
