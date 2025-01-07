@@ -35,15 +35,15 @@ jobs:
         run: |
           case "${{ matrix.runtime }}" in
             "node")
-              echo "🐳 Setting up Node.js ${matrix.version}"
+              echo "🐳 Setting up Node.js ${{ matrix.version }}"
               actions/setup-node@v4 node-version=${{ matrix.version }}
               ;;
             "deno")
-              echo "🦕 Setting up Deno ${matrix.version}"
+              echo "🦕 Setting up Deno ${{ matrix.version }}"
               denoland/setup-deno@v2 deno-version=${{ matrix.version }}
               ;;
             "bun")
-              echo "🍞 Setting up Bun ${matrix.version}"
+              echo "🍞 Setting up Bun ${{ matrix.version }}"
               oven-sh/setup-bun@v2 bun-version=${{ matrix.version }}
               ;;
             *)
