@@ -23,7 +23,7 @@ jobs:
             pm: pnpm
           - runtime: deno
             pm: yarn
-    name: 👷 Panam CI on Node-${{ matrix.node }} under ${{ matrix.os }} using ${{ matrix.pm }}
+    name: 👷 Panam CI on ${{ matrix.runtime }}-${{ matrix.version }} under ${{ matrix.os }} using ${{ matrix.pm }}
 
     timeout-minutes: 60
 
@@ -33,10 +33,9 @@ jobs:
 
       - name: 🐳 Set up Node.js
         if: matrix.runtime == 'node'
-        run: |
-          uses: actions/setup-node@v4
-          with:
-            node-version: ${{ matrix.version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.version }}
 
       - name: 🦕 Set up Deno
         if: matrix.runtime == 'deno'
