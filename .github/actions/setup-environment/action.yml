@@ -18,46 +18,46 @@ inputs:
     type: string
 
 runs:
-  using: 'bash'
+  using: 'composite'
   steps:
     - name: 🚚 Checkout repository
       uses: actions/checkout@v4
 
     - name: 🐳 Set up Node.js
-      if: matrix.runtime == 'node'
+      if: ${{ inputs.runtime == 'node' }}
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.version }}
+        node-version: ${{ inputs.version }}
 
     - name: 🦕 Set up Deno
-      if: matrix.runtime == 'deno'
+      if: ${{ inputs.runtime == 'deno' }}
       uses: denoland/setup-deno@v2
       with:
-        deno-version: ${{ matrix.version }}
+        deno-version: ${{ inputs.version }}
 
     - name: 🍞 Set up Bun
-      if: matrix.runtime == 'bun'
+      if: ${{ inputs.runtime == 'bun' }}
       uses: oven-sh/setup-bun@v2
       with:
-        bun-version: ${{ matrix.version }}
+        bun-version: ${{ inputs.version }}
 
     - name: 📦 Install dependencies
       run: |
         case "${{ inputs.runtime }}" in
           "node")
-            echo "⚙️ Installing ${{ matrix.pm }} dependencies"
-            if [[ "${{ matrix.pm }}" == "yarn" ]]; then
+            echo "⚙️ Installing ${{ inputs.pm }} dependencies"
+            corepack enable
+            if [[ "${{ inputs.pm }}" == "yarn" ]]; then
               YARN_VERSION=$(yarn --version)
               jq ".packageManager = \"yarn@$YARN_VERSION\"" package.json > yarn-package.json
               mv package.json main-package.json
               mv yarn-package.json package.json
             fi
-            corepack enable
-            corepack prepare ${{ matrix.pm }}@latest --activate
-            if [[ "${{ matrix.pm }}" == "npm" ]]; then
+            corepack prepare ${{ inputs.pm }}@latest --activate
+            if [[ "${{ inputs.pm }}" == "npm" ]]; then
               npm install --legacy-peer-deps
             else
-              ${{ matrix.pm }} install
+              ${{ inputs.pm }} install
             fi
             ;;
           "deno")
@@ -71,7 +71,7 @@ runs:
         esac
       shell: bash
 
-    - name: 🧪 Run tests on ${{ inputs.runtime }}
+    - name: 🧪 Run tests
       run: |
         case "${{ inputs.runtime }}" in
           "node")
@@ -91,3 +91,4 @@ runs:
 
     - name: 🎉 Finish test workflow
       run: echo "🎯 Tests completed for ${{ inputs.runtime }} ${{ inputs.version }}!"
+      shell: bash

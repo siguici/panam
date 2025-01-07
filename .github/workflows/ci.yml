@@ -36,4 +36,4 @@ jobs:
         with:
           runtime: ${{ matrix.runtime }}
           version: ${{ matrix.version }}
-          package_manager: ${{ matrix.pm }}
+          pm: ${{ matrix.pm }}
