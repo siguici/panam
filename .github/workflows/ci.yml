@@ -98,7 +98,3 @@ jobs:
       - name: 🎉 CI completed successfully!
         run: |
           echo "✅ All tests passed for ${{ matrix.runtime }} on ${{ matrix.os }} using ${{ matrix.pm }}!"
-          if [[ "${{ matrix.pm }}" == "yarn" ]]; then
-            mv main-package.json package.json
-          fi
-        shell: bash
