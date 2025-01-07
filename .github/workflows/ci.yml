@@ -62,12 +62,9 @@ jobs:
             corepack enable
             corepack prepare ${{ matrix.pm }}@latest --activate
             if [[ "${{ matrix.pm }}" == "npm" ]]; then
-              ${{ matrix.pm }} install --legacy-peer-deps
+              npm install --legacy-peer-deps
             else
               ${{ matrix.pm }} install
-            fi
-            if [[ "${{ matrix.pm }}" == "yarn" ]]; then
-              mv main-package.json package.json
             fi
           elif [[ "${{ matrix.runtime }}" == "deno" ]]; then
             echo "⚙️ Installing Deno dependencies"
@@ -91,4 +88,8 @@ jobs:
         shell: bash
 
       - name: 🎉 CI completed successfully!
-        run: echo "✅ All tests passed for ${{ matrix.runtime }} on ${{ matrix.os }} using ${{ matrix.pm }}!"
+        run: |
+          echo "✅ All tests passed for ${{ matrix.runtime }} on ${{ matrix.os }} using ${{ matrix.pm }}!"
+          if [[ "${{ matrix.pm }}" == "yarn" ]]; then
+            mv main-package.json package.json
+          fi
