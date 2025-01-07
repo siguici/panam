@@ -29,29 +29,26 @@ jobs:
 
     steps:
       - name: 🚚 Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: 🔧 Setup runtime - ${{ matrix.runtime }}
+      - name: 🐳 Set up Node.js
+        if: matrix.runtime == 'node'
         run: |
-          case "${{ matrix.runtime }}" in
-            "node")
-              echo "🐳 Setting up Node.js ${{ matrix.version }}"
-              actions/setup-node@v4 node-version=${{ matrix.version }}
-              ;;
-            "deno")
-              echo "🦕 Setting up Deno ${{ matrix.version }}"
-              denoland/setup-deno@v2 deno-version=${{ matrix.version }}
-              ;;
-            "bun")
-              echo "🍞 Setting up Bun ${{ matrix.version }}"
-              oven-sh/setup-bun@v2 bun-version=${{ matrix.version }}
-              ;;
-            *)
-              echo "❌ Invalid runtime specified."
-              exit 1
-              ;;
-          esac
-        shell: bash
+          uses: actions/setup-node@v4
+          with:
+            node-version: ${{ matrix.version }}
+
+      - name: 🦕 Set up Deno
+        if: matrix.runtime == 'deno'
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ matrix.version }}
+
+      - name: 🍞 Set up Bun
+        if: matrix.runtime == 'bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ matrix.version }}
 
       - name: 📦 Install dependencies
         run: |
