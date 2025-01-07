@@ -93,3 +93,4 @@ jobs:
           if [[ "${{ matrix.pm }}" == "yarn" ]]; then
             mv main-package.json package.json
           fi
+        shell: bash
