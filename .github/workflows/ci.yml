@@ -51,40 +51,48 @@ jobs:
 
       - name: 📦 Install dependencies
         run: |
-          if [[ "${{ matrix.runtime }}" == "node" ]]; then
-            echo "⚙️ Installing ${{ matrix.pm }} dependencies"
-            if [[ "${{ matrix.pm }}" == "yarn" ]]; then
-              YARN_VERSION=$(yarn --version)
-              jq ".packageManager = \"yarn@$YARN_VERSION\"" package.json > yarn-package.json
-              mv package.json main-package.json
-              mv yarn-package.json package.json
-            fi
-            corepack enable
-            corepack prepare ${{ matrix.pm }}@latest --activate
-            if [[ "${{ matrix.pm }}" == "npm" ]]; then
-              npm install --legacy-peer-deps
-            else
-              ${{ matrix.pm }} install
-            fi
-          elif [[ "${{ matrix.runtime }}" == "deno" ]]; then
-            echo "⚙️ Installing Deno dependencies"
-            deno install
-          elif [[ "${{ matrix.runtime }}" == "bun" ]]; then
-            echo "⚙️ Installing Bun dependencies"
-            bun install
-          fi
+          case "${{ inputs.runtime }}" in
+            "node")
+              echo "⚙️ Installing ${{ matrix.pm }} dependencies"
+              if [[ "${{ matrix.pm }}" == "yarn" ]]; then
+                YARN_VERSION=$(yarn --version)
+                jq ".packageManager = \"yarn@$YARN_VERSION\"" package.json > yarn-package.json
+                mv package.json main-package.json
+                mv yarn-package.json package.json
+              fi
+              corepack enable
+              corepack prepare ${{ matrix.pm }}@latest --activate
+              if [[ "${{ matrix.pm }}" == "npm" ]]; then
+                npm install --legacy-peer-deps
+              else
+                ${{ matrix.pm }} install
+              fi
+              ;;
+            "deno")
+              echo "⚙️ Installing Deno dependencies"
+              deno install
+              ;;
+            "bun")
+              echo "⚙️ Installing Bun dependencies"
+              bun install
+              ;;
+          esac
         shell: bash
 
       - name: 🔍 Run tests
         run: |
           echo "🧪 Running tests for ${{ matrix.runtime }}..."
-          if [[ "${{ matrix.runtime }}" == "node" ]]; then
-            ${{ matrix.pm }} run test
-          elif [[ "${{ matrix.runtime }}" == "deno" ]]; then
-            deno task test
-          elif [[ "${{ matrix.runtime }}" == "bun" ]]; then
-            bun run test
-          fi
+          case "${{ inputs.runtime }}" in
+            "node")
+              ${{ matrix.pm }} run test
+              ;;
+            "deno")
+              deno task test
+              ;;
+            "bun")
+              bun run test
+              ;;
+          esac
         shell: bash
 
       - name: 🎉 CI completed successfully!
