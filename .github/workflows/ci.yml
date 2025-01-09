@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Test Environment
-        uses: ./.github/actions/setup-environment
+        uses: siguici/setup-js@v0
         with:
           runtime: ${{ matrix.runtime }}
           version: ${{ matrix.version }}
