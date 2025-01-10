@@ -32,8 +32,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Test Environment
-        uses: siguici/setup-js@v0
+        uses: siguici/setup-js@v1
         with:
           runtime: ${{ matrix.runtime }}
           version: ${{ matrix.version }}
           pm: ${{ matrix.pm }}
+          scripts: test
