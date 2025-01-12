@@ -14,7 +14,7 @@
     "changeset": "changeset",
     "release": "changeset publish",
     "prepare": "husky && gitmoji -i",
-    "build": "pnpm check && tsup-node --env.NODE_ENV production",
+    "build": "tsup-node --env.NODE_ENV production",
     "start": "tsup-node --env.NODE_ENV development --watch",
     "test": "node --loader tsm --enable-source-maps bin/test.ts"
   },
@@ -70,8 +70,8 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@changesets/cli": "^2.27.11",
-    "@japa/assert": "^4.0.0",
-    "@japa/runner": "^4.0.0",
+    "@japa/assert": "^4.0.1",
+    "@japa/runner": "^4.1.0",
     "@types/cross-spawn": "^6.0.6",
     "@types/node": "^22.10.5",
     "@types/which": "^3.0.4",
@@ -82,6 +82,6 @@
     "tslib": "^2.8.1",
     "tsm": "^2.3.0",
     "tsup": "^8.3.5",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }
