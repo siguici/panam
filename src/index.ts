@@ -32,27 +32,27 @@ export class PackageManager {
     return this.name === name;
   }
 
-  isNpm(): boolean {
+  isNpm(): this is PackageManager & { name: 'npm' } {
     return this.is('npm');
   }
 
-  isCnpm(): boolean {
+  isCnpm(): this is PackageManager & { name: 'cnpm' } {
     return this.is('cnpm');
   }
 
-  isYarn(): boolean {
+  isYarn(): this is PackageManager & { name: 'yarn' } {
     return this.is('yarn');
   }
 
-  isPnpm(): boolean {
+  isPnpm(): this is PackageManager & { name: 'pnpm' } {
     return this.is('pnpm');
   }
 
-  isBun(): boolean {
+  isBun(): this is PackageManager & { name: 'bun' } {
     return this.is('bun');
   }
 
-  isDeno(): boolean {
+  isDeno(): this is PackageManager & { name: 'deno' } {
     return this.is('deno');
   }
 
