@@ -7,7 +7,21 @@ export type ProcessConfig = {
   cwd: ReturnType<typeof process.cwd>;
   env: typeof process.env;
 };
+
+export type Process = {
+  abort(): Promise<void>;
+  result: Promise<ProcessResult>;
+};
 export type ProcessOptions = Partial<ProcessConfig> | undefined;
+export type ProcessResult =
+  | {
+      status: true;
+      code: 0;
+    }
+  | {
+      status: false;
+      error: unknown;
+    };
 
 export const defaultOptions: ProcessConfig = {
   daemon: false,
@@ -35,7 +49,7 @@ export function $(
   command: string,
   args: string[],
   options: ProcessOptions = defaultOptions
-) {
+): Process {
   let child: ChildProcess;
 
   const _options = options ?? defaultOptions;
@@ -43,7 +57,7 @@ export function $(
   _options.cwd ??= defaultOptions.cwd;
   _options.daemon ??= defaultOptions.daemon;
 
-  const process = new Promise<boolean>((resolve, reject) => {
+  const result = new Promise<ProcessResult>((resolve) => {
     try {
       child = spawn(command, args, {
         cwd: _options.cwd,
@@ -53,22 +67,29 @@ export function $(
       });
 
       child.on('error', (e) => {
-        if (e) {
-          reject(e);
-          return;
-        }
-        resolve(false);
+        return {
+          status: false,
+          error: e
+        };
       });
 
       child.on('close', (code) => {
         if (code !== 0) {
-          reject(new Error(`Command ${command} ${args.join(' ')} failed`));
+          resolve({
+            status: false,
+            error: new Error(`Command ${command} ${args.join(' ')} failed`)
+          });
+
           return;
         }
-        resolve(code === 0);
+
+        resolve({
+          status: true,
+          code
+        });
       });
     } catch (e) {
-      resolve(false);
+      return resolve({ status: false, error: e });
     }
   });
 
@@ -78,5 +99,5 @@ export function $(
     }
   };
 
-  return { abort, process };
+  return { abort, result };
 }
