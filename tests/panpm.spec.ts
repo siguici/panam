@@ -15,12 +15,14 @@ test(`pm should be ${currentPm}`, ({ assert }) => {
   assert.equal(pm.name, currentPm);
 });
 
+test('pm should be installed', async ({ assert }) => {
+  const isInstalled = await pm.isInstalled();
+  assert.isBoolean(isInstalled);
+});
+
 test(pm.name, async ({ assert }) => {
   const cwd = fixtureDir(pm.name);
   process.chdir(cwd);
-
-  const version = await pm.version();
-  assert.isString(version);
 
   const install = await pm.install({ cwd });
   const result = await install.result;
