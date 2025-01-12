@@ -8,8 +8,7 @@ const currentPm = whichPm()?.name ?? 'npm';
 
 delete process.env.npm_config_user_agent;
 
-const fixturesDir = path.join(import.meta.dirname, 'fixtures');
-const fixtureDir = (pmName: string) => path.join(fixturesDir, pmName);
+const fixtureDir = (pmName: string) => path.join('tests/fixtures', pmName);
 
 test(`pm should be ${currentPm}`, ({ assert }) => {
   assert.equal(pm.name, currentPm);
