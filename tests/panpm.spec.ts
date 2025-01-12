@@ -22,8 +22,6 @@ test('pm should be installed', async ({ assert }) => {
 
 test(pm.name, async ({ assert }) => {
   const cwd = fixtureDir(pm.name);
-  process.chdir(cwd);
-
   const install = await pm.install({ cwd });
   const result = await install.result;
 
