@@ -49,7 +49,8 @@
         "recommended": true
       },
       "performance": {
-        "recommended": true
+        "recommended": true,
+        "noDelete": "off"
       },
       "recommended": true,
       "style": {

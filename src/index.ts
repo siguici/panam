@@ -1,6 +1,11 @@
 import which from 'which';
 import whichPm from 'which-pm-runs';
-import { $, exec as $exec, processOptions } from './process';
+import {
+  $,
+  exec as $exec,
+  type ProcessOptions,
+  defaultOptions
+} from './process';
 
 export class PackageManager {
   constructor(readonly name: string) {}
@@ -68,13 +73,17 @@ export class PackageManager {
     return await $exec(`${this.realname} --help`);
   }
 
-  async $(args: string | string[], opts = processOptions) {
+  async $(args: string | string[], options: ProcessOptions = defaultOptions) {
     args = Array.isArray(args) ? args : [args];
 
-    return $(this.realname, args, opts);
+    return $(this.realname, args, options);
   }
 
-  async jsr(command: string, args: string[], options = processOptions) {
+  async jsr(
+    command: string,
+    args: string[],
+    options: ProcessOptions = defaultOptions
+  ) {
     if (this.isDeno()) {
       args = args.map((arg) => this.toJsr(arg));
 
@@ -122,15 +131,15 @@ export class PackageManager {
     return module.replace(/^jsr:/, '');
   }
 
-  async install(options = processOptions) {
+  async install(options: ProcessOptions = defaultOptions) {
     return this.$('install', options);
   }
 
-  async i(options = processOptions) {
+  async i(options: ProcessOptions = defaultOptions) {
     return this.install(options);
   }
 
-  async create(app: string, options = processOptions) {
+  async create(app: string, options: ProcessOptions = defaultOptions) {
     let args = app.split(/\s+/);
 
     if (this.isDeno()) {
@@ -148,7 +157,10 @@ export class PackageManager {
     return this.$(args, options);
   }
 
-  async add(packages: string | string[], options = processOptions) {
+  async add(
+    packages: string | string[],
+    options: ProcessOptions = defaultOptions
+  ) {
     packages = Array.isArray(packages) ? packages : packages.split(/\s+/);
 
     if (this.isJsr(packages[0])) {
@@ -174,7 +186,10 @@ export class PackageManager {
         );
   }
 
-  async remove(packages: string | string[], options = processOptions) {
+  async remove(
+    packages: string | string[],
+    options: ProcessOptions = defaultOptions
+  ) {
     packages = Array.isArray(packages) ? packages : packages.split(/\s+/);
 
     if (this.isJsr(packages[0])) {
@@ -187,15 +202,21 @@ export class PackageManager {
     );
   }
 
-  async rm(packages: string | string[], options = processOptions) {
+  async rm(
+    packages: string | string[],
+    options: ProcessOptions = defaultOptions
+  ) {
     return this.remove(packages, options);
   }
 
-  async uninstall(packages: string | string[], options = processOptions) {
+  async uninstall(
+    packages: string | string[],
+    options: ProcessOptions = defaultOptions
+  ) {
     return this.remove(packages, options);
   }
 
-  async run(script: string, options = processOptions) {
+  async run(script: string, options: ProcessOptions = defaultOptions) {
     if (this.isJsr(script)) {
       return this.jsrRun(script, options);
     }
@@ -207,11 +228,11 @@ export class PackageManager {
       : this.$([this.isDeno() ? 'task' : 'run', ...args], options);
   }
 
-  async task(script: string, options = processOptions) {
+  async task(script: string, options: ProcessOptions = defaultOptions) {
     return this.run(script, options);
   }
 
-  async exec(command: string, options = processOptions) {
+  async exec(command: string, options: ProcessOptions = defaultOptions) {
     if (this.isJsr(command)) {
       return this.jsrExec(command, options);
     }
@@ -231,7 +252,7 @@ export class PackageManager {
     );
   }
 
-  async dlx(binary: string, options = processOptions) {
+  async dlx(binary: string, options: ProcessOptions = defaultOptions) {
     if (this.isJsr(binary)) {
       return this.jsrDlx(binary, options);
     }
@@ -251,7 +272,7 @@ export class PackageManager {
     );
   }
 
-  async x(executable: string, options = processOptions) {
+  async x(executable: string, options: ProcessOptions = defaultOptions) {
     if (this.isJsr(executable)) {
       return this.jsrDlx(executable, options);
     }
@@ -267,33 +288,36 @@ export class PackageManager {
     return this.$(['x', ...executable.split(/\s+/)], options);
   }
 
-  async jsrAdd(packages: string[], options = processOptions) {
+  async jsrAdd(packages: string[], options: ProcessOptions = defaultOptions) {
     return this.jsr('add', packages, options);
   }
 
-  async jsrRemove(packages: string[], options = processOptions) {
+  async jsrRemove(
+    packages: string[],
+    options: ProcessOptions = defaultOptions
+  ) {
     return this.jsr('remove', packages, options);
   }
 
-  async jsrRun(script: string, options = processOptions) {
+  async jsrRun(script: string, options: ProcessOptions = defaultOptions) {
     const args = script.split(/\s+/);
 
     return this.jsr('run', args, options);
   }
 
-  async jsrExec(command: string, options = processOptions) {
+  async jsrExec(command: string, options: ProcessOptions = defaultOptions) {
     const args = command.split(/\s+/);
 
     return this.jsr('exec', args, options);
   }
 
-  async jsrDlx(binary: string, options = processOptions) {
+  async jsrDlx(binary: string, options: ProcessOptions = defaultOptions) {
     const args = binary.split(/\s+/);
 
     return this.jsr('dlx', args, options);
   }
 
-  async jsrX(executable: string, options = processOptions) {
+  async jsrX(executable: string, options: ProcessOptions = defaultOptions) {
     const args = executable.split(/\s+/);
 
     return this.jsr('x', args, options);

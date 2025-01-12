@@ -2,17 +2,18 @@ import { type ChildProcess, exec as processExec } from 'node:child_process';
 import process from 'node:process';
 import { spawn } from 'cross-spawn';
 
-export type ProcessOptions = {
+export type ProcessConfig = {
   daemon: boolean;
   cwd: ReturnType<typeof process.cwd>;
   env: typeof process.env;
 };
+export type ProcessOptions = Partial<ProcessConfig> | undefined;
 
-export const processOptions: ProcessOptions = {
+export const defaultOptions: ProcessConfig = {
   daemon: false,
   cwd: process.cwd(),
   env: process.env
-};
+} as const;
 
 export const exec = (command: string) => {
   return new Promise(
@@ -30,16 +31,25 @@ export const exec = (command: string) => {
   );
 };
 
-export function $(command: string, args: string[], options = processOptions) {
+export function $(
+  command: string,
+  args: string[],
+  options: ProcessOptions = defaultOptions
+) {
   let child: ChildProcess;
+
+  const _options = options ?? defaultOptions;
+  _options.env ??= defaultOptions.env;
+  _options.cwd ??= defaultOptions.cwd;
+  _options.daemon ??= defaultOptions.daemon;
 
   const process = new Promise<boolean>((resolve, reject) => {
     try {
       child = spawn(command, args, {
-        cwd: options.cwd,
-        env: options.env,
-        stdio: options.daemon ? 'ignore' : 'inherit',
-        detached: options.daemon
+        cwd: _options.cwd,
+        env: _options.env,
+        stdio: _options.daemon ? 'ignore' : 'inherit',
+        detached: _options.daemon
       });
 
       child.on('error', (e) => {
