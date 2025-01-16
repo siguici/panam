@@ -93,7 +93,7 @@ export class PackageManager {
   async $(args: string | string[], options: ProcessOptions = defaultOptions) {
     args = Array.isArray(args) ? args : [args];
 
-    return $(this.realname, args, options);
+    return $(this.realname, args, options).result;
   }
 
   async jsr(
