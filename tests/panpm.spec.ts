@@ -21,8 +21,7 @@ test('pm should be installed', async ({ assert }) => {
 
 test(pm.name, async ({ assert }) => {
   const cwd = fixtureDir(pm.name);
-  const install = await pm.install({ cwd });
-  const result = await install.result;
+  const result = await pm.install({ cwd });
 
   assert.isTrue(result.status);
 }).disableTimeout();
