@@ -46,7 +46,7 @@ export function isUnicodeSupported(): boolean {
 
 const unicode = isUnicodeSupported();
 
-export const icon = {
+export const icons = {
   success: unicode ? '✅' : '[OK]',
   error: unicode ? '❌' : '[ERROR]',
   info: unicode ? 'ℹ️' : '[INFO]',
@@ -56,39 +56,39 @@ export const icon = {
   line: unicode ? '──' : '----'
 } as const;
 
+export const colors = {
+  red,
+  green,
+  blue,
+  yellow,
+  magenta,
+  cyan,
+  gray,
+  grey,
+  white,
+  black
+};
+
+export const backgrounds = {
+  red: bgRed,
+  green: bgGreen,
+  blue: bgBlue,
+  yellow: bgYellow,
+  magenta: bgMagenta,
+  cyan: bgCyan,
+  white: bgWhite,
+  black: bgBlack
+};
+
 export const styles = {
-  colors: {
-    red,
-    green,
-    blue,
-    yellow,
-    magenta,
-    cyan,
-    gray,
-    grey,
-    white,
-    black
-  },
-  backgrounds: {
-    red: bgRed,
-    green: bgGreen,
-    blue: bgBlue,
-    yellow: bgYellow,
-    magenta: bgMagenta,
-    cyan: bgCyan,
-    white: bgWhite,
-    black: bgBlack
-  },
-  textStyles: {
-    reset,
-    bold,
-    dim,
-    italic,
-    underline,
-    inverse,
-    hidden,
-    strikethrough
-  }
+  reset,
+  bold,
+  dim,
+  italic,
+  underline,
+  inverse,
+  hidden,
+  strikethrough
 };
 
 type Level = 'success' | 'error' | 'info' | 'warning' | 'debug' | 'verbose';
@@ -124,21 +124,17 @@ export function format(
   message: string,
   level: Level,
   options?: {
-    color?: keyof typeof styles.colors;
-    background?: keyof typeof styles.backgrounds;
-    style?: keyof typeof styles.textStyles;
+    color?: keyof typeof colors;
+    background?: keyof typeof backgrounds;
+    style?: keyof typeof styles;
   }
 ) {
-  const iconToUse = icon[level];
-  const colorToUse = options?.color
-    ? styles.colors[options.color]
-    : styles.colors.white;
+  const iconToUse = icons[level];
+  const colorToUse = options?.color ? colors[options.color] : colors.white;
   const backgroundToUse = options?.background
-    ? styles.backgrounds[options.background]
-    : styles.backgrounds.black;
-  const styleToUse = options?.style
-    ? styles.textStyles[options.style]
-    : styles.textStyles.reset;
+    ? backgrounds[options.background]
+    : backgrounds.black;
+  const styleToUse = options?.style ? styles[options.style] : reset;
 
   const formattedMessage = styleToUse(`${iconToUse} ${message}`);
   return `${backgroundToUse}${colorToUse(formattedMessage)}${reset}`;
@@ -154,9 +150,9 @@ export class Printer {
     message: string,
     level: Level = 'info',
     options?: {
-      color?: keyof typeof styles.colors;
-      background?: keyof typeof styles.backgrounds;
-      style?: keyof typeof styles.textStyles;
+      color?: keyof typeof colors;
+      background?: keyof typeof backgrounds;
+      style?: keyof typeof styles;
     }
   ) {
     if (this.isProduction && level === 'debug') {
@@ -177,9 +173,9 @@ export class Printer {
   success(
     message: string,
     options?: {
-      color?: keyof typeof styles.colors;
-      background?: keyof typeof styles.backgrounds;
-      style?: keyof typeof styles.textStyles;
+      color?: keyof typeof colors;
+      background?: keyof typeof backgrounds;
+      style?: keyof typeof styles;
     }
   ) {
     this.print(message, 'success', options);
@@ -188,9 +184,9 @@ export class Printer {
   error(
     message: string,
     options?: {
-      color?: keyof typeof styles.colors;
-      background?: keyof typeof styles.backgrounds;
-      style?: keyof typeof styles.textStyles;
+      color?: keyof typeof colors;
+      background?: keyof typeof backgrounds;
+      style?: keyof typeof styles;
     }
   ) {
     this.print(message, 'error', options);
@@ -199,9 +195,9 @@ export class Printer {
   info(
     message: string,
     options?: {
-      color?: keyof typeof styles.colors;
-      background?: keyof typeof styles.backgrounds;
-      style?: keyof typeof styles.textStyles;
+      color?: keyof typeof colors;
+      background?: keyof typeof backgrounds;
+      style?: keyof typeof styles;
     }
   ) {
     this.print(message, 'info', options);
@@ -210,9 +206,9 @@ export class Printer {
   warn(
     message: string,
     options?: {
-      color?: keyof typeof styles.colors;
-      background?: keyof typeof styles.backgrounds;
-      style?: keyof typeof styles.textStyles;
+      color?: keyof typeof colors;
+      background?: keyof typeof backgrounds;
+      style?: keyof typeof styles;
     }
   ) {
     this.print(message, 'warning', options);
@@ -221,9 +217,9 @@ export class Printer {
   debug(
     message: string,
     options?: {
-      color?: keyof typeof styles.colors;
-      background?: keyof typeof styles.backgrounds;
-      style?: keyof typeof styles.textStyles;
+      color?: keyof typeof colors;
+      background?: keyof typeof backgrounds;
+      style?: keyof typeof styles;
     }
   ) {
     this.print(message, 'debug', options);
@@ -232,9 +228,9 @@ export class Printer {
   verbose(
     message: string,
     options?: {
-      color?: keyof typeof styles.colors;
-      background?: keyof typeof styles.backgrounds;
-      style?: keyof typeof styles.textStyles;
+      color?: keyof typeof colors;
+      background?: keyof typeof backgrounds;
+      style?: keyof typeof styles;
     }
   ) {
     this.print(message, 'verbose', options);
