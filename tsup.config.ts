@@ -6,6 +6,6 @@ export default defineConfig((options) => {
     clean: true,
     minify: !options.watch,
     dts: true,
-    entry: ['src/index.ts', 'src/process.ts']
+    entry: ['src/cli.ts', 'src/console.ts', 'src/index.ts', 'src/process.ts']
   };
 });
