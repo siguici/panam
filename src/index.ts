@@ -8,7 +8,24 @@ import {
 } from './process';
 
 export class PackageManager {
-  constructor(readonly name: string) {}
+  constructor(readonly name: string) {
+    for (const key of Object.getOwnPropertyNames(
+      PackageManager.prototype
+    ) as (keyof PackageManager)[]) {
+      const descriptor = Object.getOwnPropertyDescriptor(
+        PackageManager.prototype,
+        key
+      );
+
+      if (descriptor && typeof descriptor.value === 'function') {
+        const value = this[key];
+        if (typeof value === 'function') {
+          // @ts-ignore
+          this[key] = value.bind(this);
+        }
+      }
+    }
+  }
 
   get realname(): string {
     return which.sync(this.name);
