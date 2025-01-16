@@ -15,7 +15,7 @@ program
   .action(async () => {
     logger.info('Installing dependencies...');
     try {
-      await install();
+      await install({ daemon: false });
       logger.success('Dependencies installed successfully.');
     } catch (err) {
       logger.error('Failed to install dependencies.');
@@ -29,7 +29,7 @@ program
   .action(async (pkg) => {
     logger.info(`Adding package "${pkg}"...`);
     try {
-      await add(pkg);
+      await add(pkg, { daemon: false });
       logger.success(`Package "${pkg}" added successfully.`);
     } catch (err) {
       logger.error(`Failed to add package "${pkg}".`);
@@ -43,7 +43,7 @@ program
   .action(async (pkg) => {
     logger.info(`Removing package "${pkg}"...`);
     try {
-      await remove(pkg);
+      await remove(pkg, { daemon: false });
       logger.success(`Package "${pkg}" removed successfully.`);
     } catch (err) {
       logger.error(`Failed to remove package "${pkg}".`);
@@ -57,7 +57,7 @@ program
   .action(async (script) => {
     logger.info(`Running script "${script}"...`);
     try {
-      await run(script);
+      await run(script, { daemon: false });
       logger.success(`Script "${script}" executed successfully.`);
     } catch (err) {
       logger.error(`Failed to execute script "${script}".`);
@@ -71,7 +71,7 @@ program
   .action(async (cmd) => {
     logger.info(`Executing command "${cmd.join(' ')}"...`);
     try {
-      await exec(cmd.join(' '));
+      await exec(cmd.join(' '), { daemon: false });
       logger.success(`Command "${cmd.join(' ')}" executed successfully.`);
     } catch (err) {
       logger.error(`Failed to execute command "${cmd.join(' ')}".`);
@@ -85,7 +85,7 @@ program
   .action(async (pkg, args) => {
     logger.info(`Running DLX package "${pkg}"...`);
     try {
-      await dlx(pkg, args);
+      await dlx([pkg, args].join(' '), { daemon: false });
       logger.success(`DLX package "${pkg}" executed successfully.`);
     } catch (err) {
       logger.error(`Failed to execute DLX package "${pkg}".`);
@@ -101,7 +101,7 @@ program
   .action(async (cmd) => {
     logger.info(`Executing command (shortcut) "${cmd.join(' ')}"...`);
     try {
-      await exec(cmd.join(' ')); // Reuses the exec implementation
+      await exec(cmd.join(' '), { daemon: false }); // Reuses the exec implementation
       logger.success(
         `Command (shortcut) "${cmd.join(' ')}" executed successfully.`
       );
