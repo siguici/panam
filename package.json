@@ -1,45 +1,33 @@
 {
-  "name": "panam",
+  "name": "panam-monorepo",
   "type": "module",
   "license": "MIT",
-  "version": "0.1.0",
+  "private": true,
   "description": "A universal command-line tool that simplifies running package manager commands across different environments (npm, cnpm, pnpm, yarn, bun, deno) with a unified interface.",
   "scripts": {
-    "check": "tsc --noEmit && biome ci .",
+    "build": "pnpm build:core && pnpm build:cli",
+    "build:core": "pnpm -C ./packages/core build",
+    "build:cli": "pnpm -C ./packages/cli build",
+    "check": "pnpm check:ci && pnpm check:packages",
+    "check:ci": "biome ci .",
+    "check:packages": "pnpm check:core && pnpm check:cli",
+    "check:core": "pnpm -C ./packages/core check",
+    "check:cli": "pnpm -C ./packages/cli check",
     "check:format": "biome format .",
     "check:lint": "biome check .",
     "fix": "pnpm lint && pnpm format",
     "format": "biome format --write .",
     "lint": "biome check --write .",
+    "test": "pnpm test:core && pnpm test:cli",
+    "test:core": "pnpm -C ./packages/core test",
+    "test:cli": "pnpm -C ./packages/cli test",
     "changeset": "changeset",
     "release": "changeset publish",
-    "prepare": "husky && gitmoji -i",
-    "build": "tsup-node --env.NODE_ENV production",
-    "start": "tsup-node --env.NODE_ENV development --watch",
-    "test": "node --loader tsm --enable-source-maps bin/test.ts"
+    "prepare": "husky && gitmoji -i"
   },
   "author": "Sigui Kessé Emmanuel <siguici@proton.me>",
   "repository": "git+https://github.com/siguici/panam.git",
   "homepage": "https://github.com/siguici/panam/tree/main#readme",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.js"
-    },
-    "./process": {
-      "types": "./dist/process.d.ts",
-      "import": "./dist/process.js",
-      "require": "./dist/process.cjs",
-      "default": "./dist/process.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "bin": "./dist/cli.js",
   "keywords": [
     "bun",
     "ci",
@@ -63,29 +51,11 @@
     "access": "public"
   },
   "bugs": "https://github.com/siguici/panam/issues",
-  "dependencies": {
-    "commander": "^13.0.0",
-    "cross-spawn": "^7.0.6",
-    "figures": "^6.1.0",
-    "kleur": "^4.1.5",
-    "which": "^5.0.0",
-    "which-pm-runs": "^1.1.0"
-  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@changesets/cli": "^2.27.11",
-    "@japa/assert": "^4.0.1",
-    "@japa/runner": "^4.1.0",
-    "@types/cross-spawn": "^6.0.6",
-    "@types/node": "^22.10.7",
-    "@types/which": "^3.0.4",
-    "@types/which-pm-runs": "^1.0.2",
     "gitmoji-cli": "^9.5.0",
     "husky": "^9.1.7",
-    "pkg-pr-new": "^0.0.39",
-    "tslib": "^2.8.1",
-    "tsm": "^2.3.0",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.3"
+    "pkg-pr-new": "^0.0.39"
   }
 }

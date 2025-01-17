@@ -1,10 +1,16 @@
-# Panam
+# Panam Monorepo
 
 A universal tool for executing commands across multiple package managers,
 independent of runtime or environment. Supporting popular tools
 like *npm*, *cnpm*, *pnpm*, *yarn*, *bun*, *deno*, and even *jsr*,
 it provides a consistent interface to simplify development workflows
 and automate tasks, regardless of the package manager being used.
+
+This monorepo contains two main packages:
+
+1. **[Panam API](./packages/core)**: The core programmatic API
+for interacting with package managers.
+2. **[Panam CLI](./packages/cli)**: The command-line interface for Panam.
 
 ---
 
@@ -23,11 +29,73 @@ and `dlx` commands with consistent behavior across environments.
 - 📂 **Custom detection**: Automatically detects the appropriate package manager
 for a given project or allows explicit specification.
 
+
+---
+
+## 📂 Packages
+
+### 1. **Panam API**
+
+The `panam` package provides a programmatic interface for developers who want to integrate Panam functionality into their own applications.
+
+- [Read more about Panam API](./packages/core/README.md)
+
+### 2. **Panam CLI**
+
+The `panam-cli` package offers a command-line interface to execute Panam commands directly in your terminal.
+
+- [Read more about Panam CLI](./packages/cli/README.md)
+
 ---
 
 ## 📦 Installation
 
-Install Panam globally using your preferred package manager:
+
+```bash
+npm install panam
+```
+
+```bash
+npm install -g panam-cli
+```
+
+## 📦 Installation
+
+Install the specific Panam package based on your needs
+using your preferred package manager:
+### Install Panam API
+
+- **With `NPM`**:
+
+  ```bash
+  npm install panam
+  ```
+
+- **With `Yarn`**:
+
+  ```bash
+  yarn add panam
+  ```
+
+- **With `PNPM`**:
+
+  ```bash
+  pnpm add panam
+  ```
+
+- **With `Bun`**:
+
+  ```bash
+  bun add panam
+  ```
+
+- **With `Deno`**:
+
+  ```bash
+  deno add --allow-scrits npm:panam
+  ```
+
+### Install Panam CLI
 
 - **With `NPM`**:
 
@@ -56,7 +124,7 @@ Install Panam globally using your preferred package manager:
 - **With `Deno`**:
 
   ```bash
-  deno install --allow-run --allow-read --allow-write npm:panam
+  deno install --allow-scripts npm:panam
   ```
 
 ---
@@ -179,7 +247,7 @@ More package managers can be added with ease.
 
 ## 📚 Documentation
 
-Go to [https://panam.js.org](https://panam.js.org)
+Go to [https://siguici.github.io/panam](https://siguici.github.io/panam)
 for more documentation and usage examples.
 
 ---

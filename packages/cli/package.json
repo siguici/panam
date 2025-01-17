@@ -1,0 +1,74 @@
+{
+  "name": "panam-cli",
+  "type": "module",
+  "license": "MIT",
+  "version": "0.0.0",
+  "description": "The command-line interface for Panam. Run commands with any package manager across your project effortlessly.",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "tsup-node --env.NODE_ENV production",
+    "start": "tsup-node --env.NODE_ENV development --watch",
+    "test": "node --loader tsm --enable-source-maps bin/test.ts"
+  },
+  "author": "Sigui Kessé Emmanuel <siguici@proton.me>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siguici/panam",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://siguici.github.io/panam",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": "https://github.com/siguici/panam/issues",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.ts",
+      "import": "./dist/cli.js",
+      "require": "./dist/cli.cjs",
+      "default": "./dist/cli.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": "./dist/cli.js",
+  "keywords": [
+    "automation",
+    "bun",
+    "cli",
+    "cnpm",
+    "command-line",
+    "cross-runtime",
+    "deno",
+    "jsr",
+    "node",
+    "npm",
+    "package-manager",
+    "panam",
+    "pnpm",
+    "yarn"
+  ],
+  "dependencies": {
+    "commander": "^13.0.0",
+    "figures": "^6.1.0",
+    "kleur": "^4.1.5",
+    "panam": "workspace:*"
+  },
+  "devDependencies": {
+    "@japa/assert": "^4.0.1",
+    "@japa/runner": "^4.1.0",
+    "@types/node": "^22.10.7",
+    "tslib": "^2.8.1",
+    "tsm": "^2.3.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3"
+  }
+}

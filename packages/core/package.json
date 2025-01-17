@@ -1,0 +1,79 @@
+{
+  "name": "panam",
+  "type": "module",
+  "license": "MIT",
+  "version": "0.0.1",
+  "description": "A universal tool for managing package managers with a unified API. Run commands across npm, pnpm, yarn, bun, deno, jsr, and more with ease",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "tsup-node --env.NODE_ENV production",
+    "start": "tsup-node --env.NODE_ENV development --watch",
+    "test": "node --loader tsm --enable-source-maps bin/test.ts"
+  },
+  "author": "Sigui Kessé Emmanuel <siguici@proton.me>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siguici/panam",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://siguici.github.io/panam",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": "https://github.com/siguici/panam/issues",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./process": {
+      "types": "./dist/process.d.ts",
+      "import": "./dist/process.js",
+      "require": "./dist/process.cjs",
+      "default": "./dist/process.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": "./dist/cli.js",
+  "keywords": [
+    "bun",
+    "ci",
+    "cnpm",
+    "crosspm",
+    "cross-pm",
+    "deno",
+    "jsr",
+    "node",
+    "npm",
+    "omnipm",
+    "omni-pm",
+    "package-manager",
+    "panam",
+    "panpm",
+    "pan-pm",
+    "pnpm",
+    "yarn"
+  ],
+  "dependencies": {
+    "cross-spawn": "^7.0.6",
+    "which": "^5.0.0",
+    "which-pm-runs": "^1.1.0"
+  },
+  "devDependencies": {
+    "@japa/assert": "^4.0.1",
+    "@japa/runner": "^4.1.0",
+    "@types/cross-spawn": "^6.0.6",
+    "@types/node": "^22.10.7",
+    "@types/which": "^3.0.4",
+    "@types/which-pm-runs": "^1.0.2",
+    "tslib": "^2.8.1",
+    "tsm": "^2.3.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3"
+  }
+}

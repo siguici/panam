@@ -1,7 +1,5 @@
-#!/usr/bin/env node
-
 import { Command } from 'commander';
-import { add, dlx, exec, install, remove, run } from '.';
+import { add, dlx, exec, install, remove, run } from 'panam';
 import { description, name, version } from '../package.json';
 import logger from './logger';
 
@@ -115,4 +113,11 @@ program.on('command:*', () => {
   process.exit(1);
 });
 
-program.parse(process.argv);
+/** @param args Pass here process.argv */
+export function panam(args: string[]): Command {
+  return program.parse(args);
+}
+
+export default function (): Command {
+  return panam(process.argv);
+}

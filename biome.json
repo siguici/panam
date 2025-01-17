@@ -13,6 +13,7 @@
   },
 
   "javascript": {
+    "globals": ["Bun", "Deno"],
     "formatter": {
       "arrowParentheses": "always",
       "bracketSameLine": false,
@@ -23,8 +24,7 @@
       "quoteStyle": "single",
       "semicolons": "always",
       "trailingCommas": "none"
-    },
-    "globals": ["Bun", "Deno"]
+    }
   },
 
   "json": {
@@ -35,7 +35,6 @@
 
   "linter": {
     "enabled": true,
-    "include": ["bin", "src", "tests"],
     "rules": {
       "a11y": {
         "recommended": true
@@ -55,7 +54,6 @@
       "recommended": true,
       "style": {
         "recommended": true,
-        "noParameterAssign": "off",
         "useBlockStatements": "error",
         "useCollapsedElseIf": "warn",
         "useNamingConvention": {
@@ -69,11 +67,9 @@
         "useSingleCaseStatement": "error"
       },
       "suspicious": {
-        "recommended": true,
-        "noExplicitAny": "off",
-        "noMisleadingCharacterClass": "off",
         "noApproximativeNumericConstant": "error",
-        "noMisrefactoredShorthandAssign": "warn"
+        "noMisrefactoredShorthandAssign": "warn",
+        "recommended": true
       }
     }
   },
@@ -96,5 +92,7 @@
   "vcs": {
     "clientKind": "git",
     "enabled": true
-  }
+  },
+
+  "extends": ["./packages/core/biome.json", "./packages/cli/biome.json"]
 }
