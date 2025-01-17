@@ -15,10 +15,10 @@ fix: install
 build: fix
 	pnpm build
 
-check: install
+check: build
 	pnpm check
 
-test: build check
+test: check
 	pnpm test
 
 pr-release: test
