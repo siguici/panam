@@ -39,7 +39,10 @@
     },
     "./package.json": "./package.json"
   },
-  "bin": "./dist/cli.js",
+  "bin": {
+    "panam": "./dist/cli.js",
+    "pnm": "./dist/cli.js"
+  },
   "keywords": [
     "automation",
     "bun",
