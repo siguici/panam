@@ -2,9 +2,9 @@ import path from 'node:path';
 import process from 'node:process';
 import { test } from '@japa/runner';
 import pm from 'panam';
-import whichPm from 'which-pm-runs';
+import { detectPackageManager } from 'panam/utils';
 
-const currentPm = whichPm()?.name ?? 'npm';
+const currentPm = detectPackageManager().name;
 
 delete process.env.npm_config_user_agent;
 

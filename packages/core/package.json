@@ -37,6 +37,12 @@
       "require": "./dist/process.cjs",
       "default": "./dist/process.js"
     },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs",
+      "default": "./dist/utils.js"
+    },
     "./package.json": "./package.json"
   },
   "keywords": [
@@ -60,8 +66,7 @@
   ],
   "dependencies": {
     "cross-spawn": "^7.0.6",
-    "which": "^5.0.0",
-    "which-pm-runs": "^1.1.0"
+    "which": "^5.0.0"
   },
   "devDependencies": {
     "@japa/assert": "^4.0.1",

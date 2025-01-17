@@ -1,11 +1,11 @@
 import which from 'which';
-import whichPm from 'which-pm-runs';
 import {
   $,
   exec as $exec,
   type ProcessOptions,
   defaultOptions
 } from './process';
+import { detectPackageManager } from './utils';
 
 export class PackageManager {
   constructor(readonly name: string) {
@@ -345,7 +345,7 @@ export function pm(name: string): PackageManager {
   return new PackageManager(name);
 }
 
-const _pm: PackageManager = pm(whichPm()?.name || 'npm');
+const _pm: PackageManager = pm(detectPackageManager().name);
 
 const [
   name,
