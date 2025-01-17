@@ -1,35 +1,31 @@
-import { execSync } from 'node:child_process';
-import * as fs from 'node:fs';
+import fs from 'node:fs';
+
+export type PackageManagerName =
+  | 'npm'
+  | 'cnpm'
+  | 'yarn'
+  | 'pnpm'
+  | 'bun'
+  | 'deno';
+export type RuntimeName = 'node' | 'bun' | 'deno';
+export type Version = `${number}.${number}.${number}` | 'latest';
 
 export interface RuntimeInfo {
-  name: string;
-  version?: string;
+  name: RuntimeName;
+  version?: Version;
 }
 
 export interface PackageManagerInfo {
-  name: string;
-  version?: string;
+  name: PackageManagerName;
+  version?: Version;
   lockfile?: string;
-}
-
-export interface OperatingSystemInfo {
-  platform: string;
-  os?: string;
-  arch: string;
-  version?: string;
-}
-
-export interface EnvironmentInfo {
-  runtime: RuntimeInfo;
-  pm: PackageManagerInfo;
-  os: OperatingSystemInfo;
 }
 
 export interface PackageJsonInfo {
   name: string;
   version: string;
-  engines: Record<string, string>;
-  packageManager: string;
+  engines: Record<RuntimeName | PackageManagerName, string>;
+  packageManager: `${PackageManagerName}@${Version}`;
 }
 
 export const defaultRuntimeInfo: RuntimeInfo = {
@@ -43,22 +39,9 @@ export const defaultPackageManagerInfo: PackageManagerInfo = {
   lockfile: undefined
 };
 
-export const defaultOperatingSystemInfo: OperatingSystemInfo = {
-  platform: process.platform,
-  os: undefined,
-  arch: process.arch,
-  version: undefined
-};
-
-const defaultEnvironment: EnvironmentInfo = {
-  runtime: defaultRuntimeInfo,
-  pm: defaultPackageManagerInfo,
-  os: defaultOperatingSystemInfo
-};
-
 const defaultWorkingDirectory = process.cwd();
 
-function getPackageManagerInfo(
+export function getPackageManagerInfo(
   cwd = defaultWorkingDirectory
 ): PackageManagerInfo {
   const userAgent = process.env.npm_config_user_agent;
@@ -70,20 +53,20 @@ function getPackageManagerInfo(
   return parseUserAgent(userAgent);
 }
 
-function parseUserAgent(userAgent: string): PackageManagerInfo {
+export function parseUserAgent(userAgent: string): PackageManagerInfo {
   const pmSpec = userAgent.split(' ')[0];
   const separatorPos = pmSpec.lastIndexOf('/');
   const name = pmSpec.substring(0, separatorPos);
-  const version = pmSpec.substring(separatorPos + 1);
+  const version = pmSpec.substring(separatorPos + 1) as Version;
 
   return {
-    name: name === 'npminstall' ? 'cnpm' : name,
+    name: name === 'npminstall' ? 'cnpm' : (name as PackageManagerName),
     version
   };
 }
 
-function getRuntimeInfo(cwd = defaultWorkingDirectory): RuntimeInfo {
-  let name: string;
+export function getRuntimeInfo(cwd = defaultWorkingDirectory): RuntimeInfo {
+  let name: RuntimeName;
   //@ts-ignore
   if (typeof Bun !== 'undefined') {
     name = 'bun';
@@ -106,7 +89,15 @@ function getRuntimeInfo(cwd = defaultWorkingDirectory): RuntimeInfo {
   return detectRuntime(cwd);
 }
 
-function getRuntimeVersion(runtime: string): string | undefined {
+export function isRuntime(name: string): name is RuntimeName {
+  return ['node', 'bun', 'deno'].includes(name);
+}
+
+export function isPackageManager(name: string): name is PackageManagerName {
+  return ['npm', 'cnpm', 'yarn', 'pnpm', 'bun', 'deno'].includes(name);
+}
+
+export function getRuntimeVersion(runtime: string): Version | undefined {
   switch (runtime) {
     case 'node':
       // @ts-ignore
@@ -122,12 +113,12 @@ function getRuntimeVersion(runtime: string): string | undefined {
   }
 }
 
-function detectRuntime(cwd = defaultWorkingDirectory): RuntimeInfo {
+export function detectRuntime(cwd = defaultWorkingDirectory): RuntimeInfo {
   const engines = parsePackageJson(cwd).engines;
 
   for (let name of Object.keys(engines)) {
     name = name.toLowerCase();
-    if (['bun', 'deno', 'node'].includes(name)) {
+    if (isRuntime(name)) {
       return {
         name,
         version: getRuntimeVersion(name)
@@ -141,7 +132,9 @@ function detectRuntime(cwd = defaultWorkingDirectory): RuntimeInfo {
   };
 }
 
-function parsePackageJson(cwd = defaultWorkingDirectory): PackageJsonInfo {
+export function parsePackageJson(
+  cwd = defaultWorkingDirectory
+): PackageJsonInfo {
   const pkg = JSON.parse(fs.readFileSync(`${cwd}/package.json`, 'utf-8'));
   return {
     name: pkg.name || '',
@@ -151,11 +144,11 @@ function parsePackageJson(cwd = defaultWorkingDirectory): PackageJsonInfo {
   };
 }
 
-function detectPackageManager(
+export function detectPackageManager(
   cwd = defaultWorkingDirectory
 ): PackageManagerInfo {
   let name = '';
-  let version = '';
+  let version: Version = 'latest';
   let lockfile: string | undefined = '';
 
   if (fs.existsSync(`${cwd}/package.json`)) {
@@ -191,76 +184,20 @@ function detectPackageManager(
   name = name === 'node' ? 'npm' : name;
   lockfile = lockfile || undefined;
 
-  return { name, version, lockfile };
-}
-
-function detectOS(): OperatingSystemInfo {
-  const platform = process.platform;
-  let os: string;
-  let version: string | undefined;
-  const arch = normalizeArch(process.arch);
-
-  if (platform === 'darwin') {
-    os = 'macOS';
-    version = execSync('sw_vers -productVersion').toString().trim();
-  } else if (platform === 'linux') {
-    os = 'Linux';
-    if (fs.existsSync('/etc/os-release')) {
-      const osRelease = fs.readFileSync('/etc/os-release', 'utf-8');
-      const name = getValueFromRelease(osRelease, 'NAME');
-      const versionId = getValueFromRelease(osRelease, 'VERSION_ID');
-      os = name || os;
-      version = versionId || undefined;
-    }
-  } else if (platform === 'win32') {
-    os = 'Windows';
-    version = execSync(
-      'powershell -Command "(Get-CimInstance -Class Win32_OperatingSystem).Version"'
-    )
-      .toString()
-      .trim();
-  } else {
-    os = 'unknown';
-    version = undefined;
+  if (isPackageManager(name)) {
+    return { name, version, lockfile };
   }
 
-  return {
-    platform,
-    os,
-    arch,
-    version
-  };
+  return { name: 'npm', version, lockfile: undefined };
 }
 
-function parsePackageManager(input: string): [string, string] {
-  const [name, version = 'latest'] = input.split('@', 2);
+export function parsePackageManager(
+  input: string
+): [PackageManagerName, Version] {
+  const [name, version = 'latest'] = input.split('@', 2) as [
+    PackageManagerName,
+    Version
+  ];
 
   return [name, version];
-}
-
-function normalizeArch(arch: string): string {
-  switch (arch) {
-    case 'x86_64':
-    case 'amd64':
-      return 'x64';
-    case 'i386':
-    case 'i686':
-      return 'x86';
-    case 'armv7l':
-    case 'armhf':
-      return 'arm';
-    case 'aarch64':
-    case 'arm64':
-      return 'arm64';
-    case 'riscv64':
-      return 'riscv64';
-    default:
-      return 'unknown';
-  }
-}
-
-function getValueFromRelease(release: string, key: string): string | null {
-  const regex = new RegExp(`^${key}=(.*)$`, 'm');
-  const match = regex.exec(release);
-  return match ? match[1].replace(/"/g, '') : null;
 }
