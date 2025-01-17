@@ -1,12 +1,12 @@
-# Panam CLI
+# 🛠️ Panam CLI
 
-🔧 **Panam CLI** provides a unified command-line interface
+**Panam CLI** provides a unified command-line interface
 for managing projects across multiple package managers,
 ensuring a seamless development experience regardless of the runtime environment.
 
 ---
 
-## 📦 Installation
+## 🚀 Installation
 
 Install Panam CLI globally using your preferred package manager:
 

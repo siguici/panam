@@ -1,4 +1,4 @@
-# Panam Monorepo
+# 🚀 Panam Monorepo
 
 A universal tool for executing commands across multiple package managers,
 independent of runtime or environment. Supporting popular tools
@@ -29,40 +29,31 @@ and `dlx` commands with consistent behavior across environments.
 - 📂 **Custom detection**: Automatically detects the appropriate package manager
 for a given project or allows explicit specification.
 
-
 ---
 
 ## 📂 Packages
 
 ### 1. **Panam API**
 
-The `panam` package provides a programmatic interface for developers who want to integrate Panam functionality into their own applications.
+The `panam` package provides a programmatic interface for developers
+who want to integrate Panam functionality into their own applications.
 
 - [Read more about Panam API](./packages/core/README.md)
 
 ### 2. **Panam CLI**
 
-The `panam-cli` package offers a command-line interface to execute Panam commands directly in your terminal.
+The `panam-cli` package offers a command-line interface
+to execute Panam commands directly in your terminal.
 
 - [Read more about Panam CLI](./packages/cli/README.md)
 
 ---
 
-## 📦 Installation
-
-
-```bash
-npm install panam
-```
-
-```bash
-npm install -g panam-cli
-```
-
-## 📦 Installation
+## 🚀 Installation
 
 Install the specific Panam package based on your needs
 using your preferred package manager:
+
 ### Install Panam API
 
 - **With `NPM`**:
