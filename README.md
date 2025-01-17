@@ -8,7 +8,7 @@ and automate tasks, regardless of the package manager being used.
 
 This monorepo contains two main packages:
 
-1. **[Panam API](./packages/core)**: The core programmatic API
+1. **[Panam](./packages/core)**: The core programmatic API
 for interacting with package managers.
 2. **[Panam CLI](./packages/cli)**: The command-line interface for Panam.
 
@@ -33,12 +33,12 @@ for a given project or allows explicit specification.
 
 ## 📂 Packages
 
-### 1. **Panam API**
+### 1. **Panam**
 
 The `panam` package provides a programmatic interface for developers
 who want to integrate Panam functionality into their own applications.
 
-- [Read more about Panam API](./packages/core/README.md)
+- [Read more about Panam](./packages/core/README.md)
 
 ### 2. **Panam CLI**
 
@@ -54,7 +54,7 @@ to execute Panam commands directly in your terminal.
 Install the specific Panam package based on your needs
 using your preferred package manager:
 
-### Install Panam API
+### Install Panam
 
 - **With `NPM`**:
 
@@ -91,31 +91,31 @@ using your preferred package manager:
 - **With `NPM`**:
 
   ```bash
-  npm install -g panam
+  npm install -g panam-cli
   ```
 
 - **With `Yarn`**:
 
   ```bash
-  yarn global add panam
+  yarn global add panam-cli
   ```
 
 - **With `PNPM`**:
 
   ```bash
-  pnpm add -g panam
+  pnpm add -g panam-cli
   ```
 
 - **With `Bun`**:
 
   ```bash
-  bun install -g panam
+  bun install -g panam-cli
   ```
 
 - **With `Deno`**:
 
   ```bash
-  deno install --allow-scripts npm:panam
+  deno install --allow-scripts npm:panam-cli
   ```
 
 ---
