@@ -1,5 +1,11 @@
 # panam-cli
 
+## 0.0.2
+
+### Patch Changes
+
+- 4cbe404: Rename the CLI and give it an alias (`pnm`)
+
 ## 0.0.1
 
 ### Patch Changes
