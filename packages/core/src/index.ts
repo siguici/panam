@@ -7,15 +7,12 @@ import {
 } from './process';
 import { detectPackageManager } from './utils';
 
-export class PackageManager {
+export class Runner {
   constructor(readonly name: string) {
     for (const key of Object.getOwnPropertyNames(
-      PackageManager.prototype
-    ) as (keyof PackageManager)[]) {
-      const descriptor = Object.getOwnPropertyDescriptor(
-        PackageManager.prototype,
-        key
-      );
+      Runner.prototype
+    ) as (keyof Runner)[]) {
+      const descriptor = Object.getOwnPropertyDescriptor(Runner.prototype, key);
 
       if (descriptor && typeof descriptor.value === 'function') {
         const value = this[key];
@@ -31,6 +28,39 @@ export class PackageManager {
     return which.sync(this.name);
   }
 
+  in(names: string[]): boolean {
+    return names.includes(this.name);
+  }
+
+  is(name: string): boolean {
+    return this.name === name;
+  }
+
+  async isInstalled(): Promise<boolean> {
+    try {
+      await this.version();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async version(): Promise<string> {
+    return await $exec(`${this.realname} --version`);
+  }
+
+  async help(): Promise<string> {
+    return await $exec(`${this.realname} --help`);
+  }
+
+  async $(args: string | string[], options: ProcessOptions = defaultOptions) {
+    args = Array.isArray(args) ? args : [args];
+
+    return $(this.realname, args, options).result;
+  }
+}
+
+export class PackageManager extends Runner {
   runCommand(): string {
     const name = this.name;
 
@@ -39,14 +69,6 @@ export class PackageManager {
     }
 
     return name;
-  }
-
-  in(names: string[]): boolean {
-    return names.includes(this.name);
-  }
-
-  is(name: string): boolean {
-    return this.name === name;
   }
 
   isNpm(): this is PackageManager & { name: 'npm' } {
@@ -71,29 +93,6 @@ export class PackageManager {
 
   isDeno(): this is PackageManager & { name: 'deno' } {
     return this.is('deno');
-  }
-
-  async isInstalled(): Promise<boolean> {
-    try {
-      await this.version();
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  async version(): Promise<string> {
-    return await $exec(`${this.realname} --version`);
-  }
-
-  async help(): Promise<string> {
-    return await $exec(`${this.realname} --help`);
-  }
-
-  async $(args: string | string[], options: ProcessOptions = defaultOptions) {
-    args = Array.isArray(args) ? args : [args];
-
-    return $(this.realname, args, options).result;
   }
 
   async jsr(
