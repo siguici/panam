@@ -1,5 +1,11 @@
 # panam
 
+## 0.2.1
+
+### Patch Changes
+
+- b51fc95: ✨ Add new project initialization command
+
 ## 0.2.0
 
 ### Minor Changes

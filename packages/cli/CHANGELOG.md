@@ -1,5 +1,13 @@
 # panam-cli
 
+## 0.1.1
+
+### Patch Changes
+
+- b51fc95: ✨ Add new project initialization command
+- Updated dependencies [b51fc95]
+  - panam@0.2.1
+
 ## 0.1.0
 
 ### Minor Changes
