@@ -41,19 +41,19 @@ program
   });
 
 program
-  .command('create <cli>')
+  .command('create <cli> [args...]')
   .description('Create a new project or package using a template.')
-  .action(async (cli) => {
-    logger.info(`Initializing project with template "${cli}".`);
+  .action(async (cli, args) => {
+    const argsStr = args?.join(' ') || '';
+    const cliStr = argsStr ? `${cli} ${argsStr}` : cli;
+    logger.info(`Initializing project with template "${cliStr}".`);
     try {
-      const result = await create(cli, { daemon: false });
+      const result = await create(cliStr, defaultOptions);
       result.status
-        ? logger.success(
-            `Project initialized successfully with template "${cli}".`
-          )
-        : logger.error(`Project initialization failed with template "${cli}".`);
+        ? logger.success(`Project initialized successfully with "${cliStr}".`)
+        : logger.error(`Project initialization failed with "${cliStr}".`);
     } catch (err) {
-      handleError(err, `Failed to initialize project with template "${cli}"`);
+      handleError(err, `Failed to initialize project with "${cliStr}"`);
     }
   });
 
