@@ -1,4 +1,4 @@
-.PHONY: install build check fix test release pr-release
+.PHONY: install ci build check fix test release pr-release
 
 install: node_modules pnpm-lock.yaml
 
@@ -8,6 +8,9 @@ node_modules: package.json packages/core/package.json packages/cli/package.json
 pnpm-lock.yaml: package.json packages/core/package.json packages/cli/package.json
 	pnpm up -r
 	pnpm fix
+
+ci: install
+	pnpm run ci
 
 fix: install
 	pnpm fix
