@@ -14,6 +14,7 @@ import {
   run,
   x
 } from 'panam';
+import type { PackageManagerName } from 'panam/pm';
 import { description, name, version } from '../package.json';
 import logger from './logger';
 
@@ -29,12 +30,15 @@ const handleError = (err: any, context: string) => {
 };
 
 program
-  .command('init')
+  .command('init [package-manager]')
   .description('Initialize a new project.')
-  .action(async () => {
+  .action(async (pm?: PackageManagerName) => {
     logger.info('Initializing project...');
     try {
-      const result = await init(defaultOptions);
+      const result = pm
+        ? await init(pm, defaultOptions)
+        : await init(defaultOptions);
+
       result.status
         ? logger.success('Project initialized successfully.')
         : logger.error('Project initialization failed');

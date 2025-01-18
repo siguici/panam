@@ -1,6 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { type ProcessOptions, defaultOptions } from './process';
+import {
+  type ProcessOptions,
+  type ProcessResult,
+  defaultOptions
+} from './process';
 import { Runner, type Version, bind } from './runner';
 import { whichRuntime } from './runtime';
 import { findUpSync } from './utils';
@@ -130,6 +134,18 @@ export class PackageManager extends Runner {
     bind(this, PackageManager.prototype);
   }
 
+  set name(name: string) {
+    if (!isPackageManager(name)) {
+      throw new Error(`Unknown package manager: ${name}`);
+    }
+
+    this._name = name;
+  }
+
+  get name(): PackageManagerName {
+    return this._name as PackageManagerName;
+  }
+
   runCommand(): string {
     const name = this.name;
 
@@ -216,8 +232,25 @@ export class PackageManager extends Runner {
     return module.replace(/^jsr:/, '');
   }
 
-  async init(options: ProcessOptions = defaultOptions) {
-    return this.$('init', options);
+  async init(
+    packageManager: PackageManagerName,
+    options?: ProcessOptions
+  ): Promise<ProcessResult>;
+  async init(options?: ProcessOptions): Promise<ProcessResult>;
+  async init(arg1: any, arg2?: any): Promise<ProcessResult> {
+    if (arg2 !== undefined) {
+      this.name = arg1;
+
+      return this.$('init', arg2);
+    }
+
+    if (typeof arg1 === 'object') {
+      return this.$('init', arg1);
+    }
+
+    this.name = arg1;
+
+    return this.$('init');
   }
 
   async install(options: ProcessOptions = defaultOptions) {

@@ -22,20 +22,24 @@ export function bind(instance: any, prototype: any) {
 }
 
 export class Runner {
-  constructor(readonly name: string) {
+  protected _name: string;
+
+  constructor(name: string) {
+    this._name = name;
+
     bind(this, Runner.prototype);
   }
 
   get realname(): string {
-    return which.sync(this.name);
+    return which.sync(this._name);
   }
 
   in(names: string[]): boolean {
-    return names.includes(this.name);
+    return names.includes(this._name);
   }
 
   is(name: string): boolean {
-    return this.name === name;
+    return this._name === name;
   }
 
   async isInstalled(): Promise<boolean> {

@@ -96,6 +96,18 @@ export class Runtime extends Runner {
     bind(this, Runtime.prototype);
   }
 
+  set name(name: string) {
+    if (!isRuntime(name)) {
+      throw new Error(`Unknown runtime: ${name}`);
+    }
+
+    this._name = name;
+  }
+
+  get name(): RuntimeName {
+    return this._name as RuntimeName;
+  }
+
   async run(file: string, options: ProcessOptions = defaultOptions) {
     if (this.is('deno')) {
       return this.$(['run', '-A', file], options);

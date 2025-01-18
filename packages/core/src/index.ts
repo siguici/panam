@@ -5,7 +5,11 @@ import pm, {
   type PackageManagerInfo,
   type PackageManagerName
 } from './pm';
-import { type ProcessOptions, defaultOptions } from './process';
+import {
+  type ProcessOptions,
+  type ProcessResult,
+  defaultOptions
+} from './process';
 import { bind } from './runner';
 import runtime, {
   Runtime,
@@ -49,8 +53,17 @@ export class Panam extends Runtime {
     bind(this, Panam.prototype);
   }
 
-  async init(options: ProcessOptions = defaultOptions) {
-    return this.pm.init(options);
+  async init(
+    packageManager: PackageManagerName,
+    options?: ProcessOptions
+  ): Promise<ProcessResult>;
+  async init(options?: ProcessOptions): Promise<ProcessResult>;
+  async init(arg1: any, arg2?: any): Promise<ProcessResult> {
+    if (arg2 !== undefined) {
+      return this.pm.init(arg1, arg2);
+    }
+
+    return this.pm.init(arg1);
   }
 
   async install(options: ProcessOptions = defaultOptions) {
