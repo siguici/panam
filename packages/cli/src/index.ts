@@ -14,6 +14,20 @@ const handleError = (err: any, context: string) => {
   logger.error(`${context}: ${errorMessage}`);
 };
 
+// `install` command
+program
+  .command('install')
+  .description('Install all project dependencies.')
+  .action(async () => {
+    logger.info('Installing project dependencies...');
+    try {
+      await install(defaultOptions);
+      logger.success('All dependencies installed successfully.');
+    } catch (err) {
+      handleError(err, 'Dependency installation failed');
+    }
+  });
+
 // `create` command
 program
   .command('create <cli>')
@@ -30,52 +44,44 @@ program
     }
   });
 
-// `install` command
-program
-  .command('install')
-  .description('Install all project dependencies.')
-  .action(async () => {
-    logger.info('Installing project dependencies...');
-    try {
-      await install(defaultOptions);
-      logger.success('All dependencies installed successfully.');
-    } catch (err) {
-      handleError(err, 'Dependency installation failed');
-    }
-  });
-
 // `add` command
 program
-  .command('add <package>')
-  .description('Add a package as a dependency to the project.')
-  .action(async (pkg) => {
-    logger.info(`Adding dependency "${pkg}".`);
+  .command('add <packages...>')
+  .alias('use')
+  .description('Add one or more dependencies to the project.')
+  .action(async (packages) => {
+    const packagesStr = packages?.join(' ') || '';
+    logger.info(`Adding dependencies "${packagesStr}".`);
     try {
-      await add(pkg, defaultOptions);
-      logger.success(`Dependency "${pkg}" added successfully.`);
+      await add(packages, defaultOptions);
+      logger.success(`Dependencies "${packagesStr}" added successfully.`);
     } catch (err) {
-      handleError(err, `Failed to add dependency "${pkg}"`);
+      handleError(err, `Failed to add dependencies "${packagesStr}"`);
     }
   });
 
 // `remove` command
 program
-  .command('remove <package>')
-  .description('Remove a package from the project dependencies.')
-  .action(async (pkg) => {
-    logger.info(`Removing dependency "${pkg}".`);
+  .command('remove <packages...>')
+  .alias('uninstall')
+  .description('Remove one or more dependencies from the project dependencies.')
+  .action(async (packages) => {
+    const packagesStr = packages?.join(' ') || '';
+    logger.info(`Removing dependencies "${packagesStr}".`);
     try {
-      await remove(pkg, defaultOptions);
-      logger.success(`Dependency "${pkg}" removed successfully.`);
+      await remove(packages, defaultOptions);
+      logger.success(`Dependencies "${packagesStr}" removed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to remove dependency "${pkg}"`);
+      handleError(err, `Failed to remove dependencies "${packagesStr}"`);
     }
   });
 
 // `run` command
 program
   .command('run <script>')
-  .description("Run a script defined in the project's package.json.")
+  .description(
+    "Run a local file or a script defined in the project's package.json."
+  )
   .action(async (script) => {
     logger.info(`Running script "${script}"...`);
     try {
@@ -120,18 +126,18 @@ program
 
 // `x` command
 program
-  .command('x <command...>')
+  .command('x <command> [args...]')
   .description(
     'Shortcut for executing commands, similar to "npm|bun x" or "pnpm|yarn exec/dlx" depending on package presence.'
   )
-  .action(async (cmd) => {
-    const commandStr = cmd.join(' ');
-    logger.info(`Executing shortcut command: "${commandStr}".`);
+  .action(async (cmd, args) => {
+    const argsStr = args.join(' ');
+    logger.info(`Executing shortcut command: "${argsStr}".`);
     try {
-      await x(commandStr, defaultOptions);
-      logger.success(`Shortcut command "${commandStr}" executed successfully.`);
+      await x([cmd, argsStr].join(' '), defaultOptions);
+      logger.success(`Shortcut command "${argsStr}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute shortcut command "${commandStr}"`);
+      handleError(err, `Failed to execute shortcut command "${argsStr}"`);
     }
   });
 
