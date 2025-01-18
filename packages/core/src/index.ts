@@ -151,6 +151,10 @@ export class Panam extends Runtime {
     return this.pm.jsrX(executable, options);
   }
 
+  status(options: ProcessOptions = defaultOptions) {
+    return this.git.status(options);
+  }
+
   async commit(message: string, options: ProcessOptions = defaultOptions) {
     return this.git.commit(message, options);
   }
@@ -169,6 +173,18 @@ export class Panam extends Runtime {
     options: ProcessOptions = defaultOptions
   ) {
     return this.git.push(remote, branch, options);
+  }
+
+  branch(name?: string, options: ProcessOptions = defaultOptions) {
+    return this.git.branch(name, options);
+  }
+
+  checkout(branch: string, options: ProcessOptions = defaultOptions) {
+    return this.git.checkout(branch, options);
+  }
+
+  merge(branch: string, options: ProcessOptions = defaultOptions) {
+    return this.git.merge(branch, options);
   }
 }
 
@@ -201,9 +217,13 @@ const [
   jsrExec,
   jsrDlx,
   jsrX,
+  status,
   commit,
   push,
-  pull
+  pull,
+  branch,
+  checkout,
+  merge
 ] = [
   _panam.name,
   _panam.realname,
@@ -224,9 +244,13 @@ const [
   _panam.jsrExec,
   _panam.jsrDlx,
   _panam.jsrX,
+  _panam.status,
   _panam.commit,
   _panam.push,
-  _panam.pull
+  _panam.pull,
+  _panam.branch,
+  _panam.checkout,
+  _panam.merge
 ];
 
 export {
@@ -249,9 +273,13 @@ export {
   jsrExec,
   jsrDlx,
   jsrX,
+  status,
   commit,
   push,
-  pull
+  pull,
+  branch,
+  checkout,
+  merge
 };
 
 export default _panam;
