@@ -93,13 +93,13 @@ program
   )
   .action(async (script, args) => {
     const argsStr = args?.join(' ') || '';
-    const scriptWithArgs = argsStr ? `${script} ${argsStr}` : script;
-    logger.info(`Running script "${scriptWithArgs}".`);
+    const scriptStr = argsStr ? `${script} ${argsStr}` : script;
+    logger.info(`Running script "${scriptStr}".`);
     try {
-      await run(scriptWithArgs, defaultOptions);
-      logger.success(`Script "${scriptWithArgs}" executed successfully.`);
+      await run(scriptStr, defaultOptions);
+      logger.success(`Script "${scriptStr}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute script "${scriptWithArgs}"`);
+      handleError(err, `Failed to execute script "${scriptStr}"`);
     }
   });
 
@@ -107,7 +107,7 @@ program
   .command('exec <command...>')
   .description("Execute a shell command using the project's package manager.")
   .action(async (cmd) => {
-    const commandStr = cmd.join(' ');
+    const commandStr = cmd.join(' ') || '';
     logger.info(`Executing shell command: "${commandStr}".`);
     try {
       await exec(commandStr, defaultOptions);
@@ -118,34 +118,36 @@ program
   });
 
 program
-  .command('dlx <package> [args...]')
+  .command('dlx <binary> [args...]')
   .description(
-    'Run a package temporarily without adding it as a project dependency.'
+    'Run a binary temporarily without adding it as a project dependency.'
   )
-  .action(async (pkg, args) => {
+  .action(async (bin, args) => {
     const argsStr = args?.join(' ') || '';
-    logger.info(`Running DLX package "${pkg}" with args: "${argsStr}".`);
+    const binStr = argsStr ? `${bin} ${argsStr}` : bin;
+    logger.info(`Running DLX binary "${binStr}".`);
     try {
-      await dlx([pkg, argsStr].join(' '), defaultOptions);
-      logger.success(`DLX package "${pkg}" executed successfully.`);
+      await dlx(binStr, defaultOptions);
+      logger.success(`DLX binary "${binStr}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute DLX package "${pkg}"`);
+      handleError(err, `Failed to execute DLX binary "${binStr}"`);
     }
   });
 
 program
-  .command('x <command> [args...]')
+  .command('x <executable> [args...]')
   .description(
     'Shortcut for executing commands, similar to "npm|bun x" or "pnpm|yarn exec/dlx" depending on package presence.'
   )
-  .action(async (cmd, args) => {
+  .action(async (exec, args) => {
     const argsStr = args.join(' ');
-    logger.info(`Executing shortcut command: "${argsStr}".`);
+    const execStr = argsStr ? `${exec} ${argsStr}` : exec;
+    logger.info(`Executing shortcut command: "${execStr}".`);
     try {
-      await x([cmd, argsStr].join(' '), defaultOptions);
-      logger.success(`Shortcut command "${argsStr}" executed successfully.`);
+      await x(execStr, defaultOptions);
+      logger.success(`Shortcut command "${execStr}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute shortcut command "${argsStr}"`);
+      handleError(err, `Failed to execute shortcut command "${execStr}"`);
     }
   });
 
@@ -189,30 +191,31 @@ program
   )
   .action(async (script, args) => {
     const argsStr = args?.join(' ') || '';
-    const scriptWithArgs = argsStr ? `${script} ${argsStr}` : script;
-    logger.info(`Running JSR script "${scriptWithArgs}".`);
+    const scriptStr = argsStr ? `${script} ${argsStr}` : script;
+    logger.info(`Running JSR script "${scriptStr}".`);
     try {
-      await jsrRun(`${scriptWithArgs}`, defaultOptions);
-      logger.success(`JSR Script "${scriptWithArgs}" executed successfully.`);
+      await jsrRun(scriptStr, defaultOptions);
+      logger.success(`JSR Script "${scriptStr}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute JSR script "${scriptWithArgs}"`);
+      handleError(err, `Failed to execute JSR script "${scriptStr}"`);
     }
   });
 
 program
-  .command('jsr-x <package> [args...]')
+  .command('jsr-x <binary> [args...]')
   .alias('jsr:x')
   .description(
-    'Run a JSR package temporarily without adding it as a project dependency.'
+    'Run a JSR binary temporarily without adding it as a project dependency.'
   )
-  .action(async (pkg, args) => {
+  .action(async (bin, args) => {
     const argsStr = args?.join(' ') || '';
-    logger.info(`Running JSR DLX package "${pkg}" with args: "${argsStr}".`);
+    const binStr = argsStr ? `${bin} ${argsStr}` : bin;
+    logger.info(`Running JSR DLX binary "${binStr}".`);
     try {
-      await jsrX([pkg, argsStr].join(' '), defaultOptions);
-      logger.success(`JSR DLX package "${pkg}" executed successfully.`);
+      await jsrX(binStr, defaultOptions);
+      logger.success(`JSR DLX binary "${binStr}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute JSR DLX package "${pkg}"`);
+      handleError(err, `Failed to execute JSR DLX binary "${binStr}"`);
     }
   });
 
