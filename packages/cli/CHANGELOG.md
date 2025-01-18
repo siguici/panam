@@ -1,5 +1,13 @@
 # panam-cli
 
+## 0.1.2
+
+### Patch Changes
+
+- c1b6104: 🚑️ Fix new project initialization command
+- Updated dependencies [c1b6104]
+  - panam@0.2.2
+
 ## 0.1.1
 
 ### Patch Changes

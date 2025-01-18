@@ -2,7 +2,7 @@
   "name": "panam-cli",
   "type": "module",
   "license": "MIT",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The command-line interface for Panam. Run commands with any package manager across your project effortlessly.",
   "scripts": {
     "check": "tsc --noEmit",

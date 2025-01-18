@@ -2,7 +2,7 @@
   "name": "panam",
   "type": "module",
   "license": "MIT",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A universal tool for managing package managers with a unified API. Run commands across npm, pnpm, yarn, bun, deno, jsr, and more with ease",
   "scripts": {
     "check": "tsc --noEmit",

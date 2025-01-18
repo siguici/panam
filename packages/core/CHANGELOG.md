@@ -1,5 +1,11 @@
 # panam
 
+## 0.2.2
+
+### Patch Changes
+
+- c1b6104: 🚑️ Fix new project initialization command
+
 ## 0.2.1
 
 ### Patch Changes
