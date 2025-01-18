@@ -57,7 +57,7 @@ panam install
 Run a script defined in your `package.json`:
 
 ```bash
-panam run <script-name>
+pnm run <script-name>
 ```
 
 ### Add or Remove Packages
@@ -65,13 +65,13 @@ panam run <script-name>
 #### Add a Package
 
 ```bash
-panam add lodash
+pnm add lodash
 ```
 
 #### Remove a Package
 
 ```bash
-panam remove lodash
+pnm remove lodash
 ```
 
 ### Use `exec` or `dlx`
@@ -79,13 +79,13 @@ panam remove lodash
 #### Execute a Global Tool
 
 ```bash
-panam exec eslint .
+pnm exec eslint .
 ```
 
 #### Use `dlx` for Temporary Tools
 
 ```bash
-panam dlx create-react-app my-app
+pnm dlx create-react-app my-app
 ```
 
 ---
@@ -106,25 +106,25 @@ for `install`, `add`, `remove`, `run`, `exec`, and `dlx` commands.
 ### Install Dependencies
 
 ```bash
-panam install
+pnm install
 ```
 
 ### Add a Development Dependency
 
 ```bash
-panam add --dev typescript
+pnm add --dev typescript
 ```
 
 ### Run a Build Script
 
 ```bash
-panam run build
+pnm run build
 ```
 
 ### Lint Your Code
 
 ```bash
-panam exec eslint .
+pnm exec eslint .
 ```
 
 ---

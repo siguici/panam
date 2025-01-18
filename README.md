@@ -1,4 +1,4 @@
-# 🚀 Panam Monorepo
+# Panam <span><img src="https://github.com/siguici/art/blob/HEAD/images/logo.svg" alt="⚡" width="24" /></span>
 
 A universal tool for executing commands across multiple package managers,
 independent of runtime or environment. Supporting popular tools
@@ -33,16 +33,16 @@ for a given project or allows explicit specification.
 
 ## 📂 Packages
 
-### 1. **Panam**
+### 1. **Panam core**
 
-The `panam` package provides a programmatic interface for developers
+The [`panam`](https://npm.im/panam) package provides a programmatic interface for developers
 who want to integrate Panam functionality into their own applications.
 
-- [Read more about Panam](./packages/core/README.md)
+- [Read more about Panam core](./packages/core/README.md)
 
 ### 2. **Panam CLI**
 
-The `panam-cli` package offers a command-line interface
+The [`panam-cli`](https://npm.im/panam-cli) package offers a command-line interface
 to execute Panam commands directly in your terminal.
 
 - [Read more about Panam CLI](./packages/cli/README.md)
@@ -127,7 +127,7 @@ using your preferred package manager:
 Panam automatically detects the active package manager for your project:
 
 ```bash
-panam install
+pnm install
 ```
 
 ### Execute a script
@@ -135,7 +135,7 @@ panam install
 Run a script defined in your `package.json`:
 
 ```bash
-panam run <script-name>
+pnm run <script-name>
 ```
 
 ### Use `exec` or `dlx`
@@ -143,7 +143,7 @@ panam run <script-name>
 Panam adapts commands like `exec` or `dlx` for compatibility across package managers:
 
 ```bash
-panam exec vite --template vue
+pnm exec vite --template vue
 ```
 
 ---
@@ -153,37 +153,37 @@ panam exec vite --template vue
 ### Install dependencies
 
 ```bash
-panam install
+pnm install
 ```
 
 ### Add a package
 
 ```bash
-panam add lodash
+pnm add @qwikdev/astro
 ```
 
 ### Remove a package
 
 ```bash
-panam remove lodash
+pnm remove @qwikdev/astro
 ```
 
 ### Create a new project
 
 ```bash
-panam create react-app my-app
+pnm create @qwikdev/astro my-qwik-astro-app
 ```
 
 ### Execute a global tool
 
 ```bash
-panam exec eslint .
+pnm exec @qwikdev/create-astro .
 ```
 
 ### Use `dlx` to run a package without installing it globally
 
 ```bash
-panam dlx create-react-app my-react-app
+pnm dlx @qwikdev/create-astro my-qwik-astro-app
 ```
 
 ---
@@ -193,29 +193,28 @@ panam dlx create-react-app my-react-app
 Panam also exposes a powerful programmatic API for advanced use cases:
 
 ```typescript
-import pm from 'panam';
+import pnm from 'panam';
 
-const version = await pm.version();
-console.log(`Current package manager version: ${version}`);
+const version = await pnm.version();
+console.log(`Current runtime version: ${version}`);
 
-const help = await pm.help();
-console.log(help);
+await pnm.help(); // Show the runtime help message
 
-await pm.$('install');
+await pnm.pm.$('install');
 
-await pm.install();
+await pnm.install();
 
-await pm.create('@qwikdev/astro');
+await pnm.create('@qwikdev/astro');
 
-await pm.add('@qwikdev/astro');
+await pnm.add('@qwikdev/astro');
 
-await pm.run('create-astro');
+await pnm.run('create-astro');
 
-await pm.exec('astro add @qwikdev/astro');
+await pnm.exec('astro add @qwikdev/astro');
 
-await pm.dlx('@qwikdev/create-astro my-qwik-astro-app');
+await pnm.dlx('@qwikdev/create-astro my-qwik-astro-app');
 
-await pm.x('astro add @qwikdev/astro');
+await pnm.x('astro add @qwikdev/astro');
 ```
 
 ---

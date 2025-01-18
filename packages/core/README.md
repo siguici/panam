@@ -38,7 +38,7 @@ Install the Core API as a standalone package:
 Start by importing Panam Core API into your project:
 
 ```typescript
-import pm from 'panam';
+import pnm from 'panam';
 ```
 
 ### Run Commands
@@ -48,37 +48,37 @@ Use the unified API to execute commands across various package managers:
 #### Install dependencies
 
 ```typescript
-await pm.install();
+await pnm.install();
 ```
 
 #### Add a package
 
 ```typescript
-await pm.add('lodash');
+await pnm.add('lodash');
 ```
 
 #### Remove a package
 
 ```typescript
-await pm.remove('lodash');
+await pnm.remove('lodash');
 ```
 
 #### Run a script
 
 ```typescript
-await pm.run('build');
+await pnm.run('build');
 ```
 
 #### Execute a tool
 
 ```typescript
-await pm.exec('eslint .');
+await pnm.exec('eslint .');
 ```
 
 #### Use `dlx` to execute temporary tools
 
 ```typescript
-await pm.dlx('create-react-app my-app');
+await pnm.dlx('create-react-app my-app');
 ```
 
 ---
@@ -102,7 +102,7 @@ await pm.dlx('create-react-app my-app');
 - **`exec(command: string)`**:
   Executes a specific command using the detected package manager.
 
-- **`dlx(command: string)`**:
+- **`dlx(binary: string)`**:
   Runs a package as a one-time executable.
 
 ---
