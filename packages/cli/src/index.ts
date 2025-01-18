@@ -33,7 +33,7 @@ program
   .action(async () => {
     logger.info('Installing project dependencies...');
     try {
-      await install(defaultOptions);
+      const result = await install(defaultOptions);
       logger.success('All dependencies installed successfully.');
     } catch (err) {
       handleError(err, 'Dependency installation failed');
@@ -46,10 +46,12 @@ program
   .action(async (cli) => {
     logger.info(`Initializing project with template "${cli}".`);
     try {
-      await create(cli, { daemon: false });
-      logger.success(
-        `Project initialized successfully with template "${cli}".`
-      );
+      const result = await create(cli, { daemon: false });
+      result.status
+        ? logger.success(
+            `Project initialized successfully with template "${cli}".`
+          )
+        : logger.error(`Project initialization failed with template "${cli}".`);
     } catch (err) {
       handleError(err, `Failed to initialize project with template "${cli}"`);
     }
@@ -63,8 +65,10 @@ program
     const packagesStr = packages?.join(' ') || '';
     logger.info(`Adding dependencies "${packagesStr}".`);
     try {
-      await add(packages, defaultOptions);
-      logger.success(`Dependencies "${packagesStr}" added successfully.`);
+      const result = await add(packages, defaultOptions);
+      result.status
+        ? logger.success(`Dependencies "${packagesStr}" added successfully.`)
+        : logger.error(`Dependencies "${packagesStr}" addition failed.`);
     } catch (err) {
       handleError(err, `Failed to add dependencies "${packagesStr}"`);
     }
@@ -78,8 +82,10 @@ program
     const packagesStr = packages?.join(' ') || '';
     logger.info(`Removing dependencies "${packagesStr}".`);
     try {
-      await remove(packages, defaultOptions);
-      logger.success(`Dependencies "${packagesStr}" removed successfully.`);
+      const result = await remove(packages, defaultOptions);
+      result.status
+        ? logger.success(`Dependencies "${packagesStr}" removed successfully.`)
+        : logger.error(`Dependencies "${packagesStr}" removal failed.`);
     } catch (err) {
       handleError(err, `Failed to remove dependencies "${packagesStr}"`);
     }
@@ -96,8 +102,10 @@ program
     const scriptStr = argsStr ? `${script} ${argsStr}` : script;
     logger.info(`Running script "${scriptStr}".`);
     try {
-      await run(scriptStr, defaultOptions);
-      logger.success(`Script "${scriptStr}" executed successfully.`);
+      const result = await run(scriptStr, defaultOptions);
+      result.status
+        ? logger.success(`Script "${scriptStr}" executed successfully.`)
+        : logger.error(`Script "${scriptStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute script "${scriptStr}"`);
     }
@@ -110,8 +118,10 @@ program
     const commandStr = cmd.join(' ') || '';
     logger.info(`Executing shell command: "${commandStr}".`);
     try {
-      await exec(commandStr, defaultOptions);
-      logger.success(`Shell command "${commandStr}" executed successfully.`);
+      const result = await exec(commandStr, defaultOptions);
+      result.status
+        ? logger.success(`Shell command "${commandStr}" executed successfully.`)
+        : logger.error(`Shell command "${commandStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute shell command "${commandStr}"`);
     }
@@ -127,8 +137,10 @@ program
     const binStr = argsStr ? `${bin} ${argsStr}` : bin;
     logger.info(`Running DLX binary "${binStr}".`);
     try {
-      await dlx(binStr, defaultOptions);
-      logger.success(`DLX binary "${binStr}" executed successfully.`);
+      const result = await dlx(binStr, defaultOptions);
+      result.status
+        ? logger.success(`DLX binary "${binStr}" executed successfully.`)
+        : logger.error(`DLX binary "${binStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute DLX binary "${binStr}"`);
     }
@@ -144,8 +156,10 @@ program
     const execStr = argsStr ? `${exec} ${argsStr}` : exec;
     logger.info(`Executing shortcut command: "${execStr}".`);
     try {
-      await x(execStr, defaultOptions);
-      logger.success(`Shortcut command "${execStr}" executed successfully.`);
+      const result = await x(execStr, defaultOptions);
+      result.status
+        ? logger.success(`Shortcut command "${execStr}" executed successfully.`)
+        : logger.error(`Shortcut command "${execStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute shortcut command "${execStr}"`);
     }
@@ -159,8 +173,12 @@ program
     const packagesStr = packages?.join(' ') || '';
     logger.info(`Adding JSR dependencies "${packagesStr}".`);
     try {
-      await jsrAdd(packages, defaultOptions);
-      logger.success(`JSR Dependencies "${packagesStr}" added successfully.`);
+      const result = await jsrAdd(packages, defaultOptions);
+      result.status
+        ? logger.success(
+            `JSR Dependencies "${packagesStr}" added successfully.`
+          )
+        : logger.error(`JSR Dependencies "${packagesStr}" addition failed.`);
     } catch (err) {
       handleError(err, `Failed to add JSR dependencies "${packagesStr}"`);
     }
@@ -176,8 +194,12 @@ program
     const packagesStr = packages?.join(' ') || '';
     logger.info(`Removing JSR dependencies "${packagesStr}".`);
     try {
-      await jsrRemove(packages, defaultOptions);
-      logger.success(`JSR Dependencies "${packagesStr}" removed successfully.`);
+      const result = await jsrRemove(packages, defaultOptions);
+      result.status
+        ? logger.success(
+            `JSR Dependencies "${packagesStr}" removed successfully.`
+          )
+        : logger.error(`JSR Dependencies "${packagesStr}" removal failed.`);
     } catch (err) {
       handleError(err, `Failed to remove JSR dependencies "${packagesStr}"`);
     }
@@ -194,8 +216,10 @@ program
     const scriptStr = argsStr ? `${script} ${argsStr}` : script;
     logger.info(`Running JSR script "${scriptStr}".`);
     try {
-      await jsrRun(scriptStr, defaultOptions);
-      logger.success(`JSR Script "${scriptStr}" executed successfully.`);
+      const result = await jsrRun(scriptStr, defaultOptions);
+      result.status
+        ? logger.success(`JSR Script "${scriptStr}" executed successfully.`)
+        : logger.error(`JSR Script "${scriptStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute JSR script "${scriptStr}"`);
     }
@@ -212,8 +236,10 @@ program
     const binStr = argsStr ? `${bin} ${argsStr}` : bin;
     logger.info(`Running JSR DLX binary "${binStr}".`);
     try {
-      await jsrX(binStr, defaultOptions);
-      logger.success(`JSR DLX binary "${binStr}" executed successfully.`);
+      const result = await jsrX(binStr, defaultOptions);
+      result.status
+        ? logger.success(`JSR DLX binary "${binStr}" executed successfully.`)
+        : logger.error(`JSR DLX binary "${binStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute JSR DLX binary "${binStr}"`);
     }
