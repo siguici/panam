@@ -43,6 +43,12 @@
       "require": "./dist/process.cjs",
       "default": "./dist/process.js"
     },
+    "./runner": {
+      "types": "./dist/runner.d.ts",
+      "import": "./dist/runner.js",
+      "require": "./dist/runner.cjs",
+      "default": "./dist/runner.js"
+    },
     "./runtime": {
       "types": "./dist/runtime.d.ts",
       "import": "./dist/runtime.js",
