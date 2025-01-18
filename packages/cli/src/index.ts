@@ -4,6 +4,7 @@ import {
   create,
   dlx,
   exec,
+  init,
   install,
   jsrAdd,
   jsrRemove,
@@ -33,7 +34,7 @@ program
   .action(async () => {
     logger.info('Initializing project...');
     try {
-      const result = await install(defaultOptions);
+      const result = await init(defaultOptions);
       result.status
         ? logger.success('Project initialized successfully.')
         : logger.error('Project initialization failed');

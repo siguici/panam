@@ -49,6 +49,10 @@ export class Panam extends Runtime {
     bind(this, Panam.prototype);
   }
 
+  async init(options: ProcessOptions = defaultOptions) {
+    return this.pm.init(options);
+  }
+
   async install(options: ProcessOptions = defaultOptions) {
     return this.pm.install(options);
   }
@@ -145,6 +149,7 @@ const _panam = panam(runtime, pm);
 const [
   name,
   realname,
+  init,
   install,
   create,
   add,
@@ -164,6 +169,7 @@ const [
 ] = [
   _panam.name,
   _panam.realname,
+  _panam.init,
   _panam.install,
   _panam.create,
   _panam.add,
@@ -185,6 +191,7 @@ const [
 export {
   name,
   realname,
+  init,
   install,
   create,
   add,

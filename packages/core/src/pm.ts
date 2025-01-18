@@ -409,6 +409,7 @@ const _pm: PackageManager = pm(whichPackageManager().name);
 const [
   name,
   realname,
+  init,
   install,
   create,
   add,
@@ -428,6 +429,7 @@ const [
 ] = [
   _pm.name,
   _pm.realname,
+  _pm.init,
   _pm.install,
   _pm.create,
   _pm.add,
@@ -449,6 +451,7 @@ const [
 export {
   name,
   realname,
+  init,
   install,
   create,
   add,
