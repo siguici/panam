@@ -216,11 +216,21 @@ program
     }
   });
 
-program.on('command:*', () => {
-  logger.error(
-    'Invalid command. Use --help to see the list of available commands.'
-  );
-  process.exit(1);
+program.on('command:*', async (args) => {
+  const script = args?.join(' ') || '';
+  const isJsr = script.startsWith('jsr-') || script.startsWith('jsr:');
+  logger.info(`Running${isJsr ? ' JSR' : ''} script "${script}".`);
+  try {
+    await run(script, defaultOptions);
+    logger.success(
+      `${isJsr ? ' JSR ' : ''}Script "${script}" executed successfully.`
+    );
+  } catch (err) {
+    handleError(
+      err,
+      `Failed to execute${isJsr ? ' JSR' : ''} script "${script}"`
+    );
+  }
 });
 
 /** @param args Pass here process.argv */
