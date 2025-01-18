@@ -34,9 +34,11 @@ program
     logger.info('Installing project dependencies...');
     try {
       const result = await install(defaultOptions);
-      logger.success('All dependencies installed successfully.');
+      result.status
+        ? logger.success('All dependencies installed successfully.')
+        : logger.error('Dependency installation failed');
     } catch (err) {
-      handleError(err, 'Dependency installation failed');
+      handleError(err, 'Failed to install dependencies');
     }
   });
 
