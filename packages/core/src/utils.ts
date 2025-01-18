@@ -1,32 +1,12 @@
 import fs from 'node:fs';
-
-export type PackageManagerName =
-  | 'npm'
-  | 'cnpm'
-  | 'yarn'
-  | 'pnpm'
-  | 'bun'
-  | 'deno';
-export type RuntimeName = 'node' | 'bun' | 'deno';
-export type Version = `${number}.${number}.${number}` | 'latest';
-
-export interface RuntimeInfo {
-  name: RuntimeName;
-  version?: Version;
-}
-
-export interface PackageManagerInfo {
-  name: PackageManagerName;
-  version?: Version;
-  lockfile?: string;
-}
-
-export interface PackageJsonInfo {
-  name: string;
-  version: string;
-  engines: Record<RuntimeName | PackageManagerName, string>;
-  packageManager: `${PackageManagerName}@${Version}`;
-}
+import type {
+  PackageJsonInfo,
+  PackageManagerInfo,
+  PackageManagerName,
+  RuntimeInfo,
+  RuntimeName,
+  Version
+} from './types';
 
 export const defaultRuntimeInfo: RuntimeInfo = {
   name: 'node',
@@ -39,7 +19,7 @@ export const defaultPackageManagerInfo: PackageManagerInfo = {
   lockfile: undefined
 };
 
-const defaultWorkingDirectory = process.cwd();
+export const defaultWorkingDirectory = process.cwd();
 
 export function getPackageManagerInfo(
   cwd = defaultWorkingDirectory

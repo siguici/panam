@@ -1,395 +1,168 @@
-import which from 'which';
-import {
-  $,
-  exec as $exec,
-  type ProcessOptions,
-  defaultOptions
-} from './process';
-import { detectPackageManager } from './utils';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import pm, { type PackageManager } from './pm';
+import { type ProcessOptions, defaultOptions } from './process';
+import { Runner } from './runner';
+import runtime, { type Runtime } from './runtime';
+import { defaultWorkingDirectory } from './utils';
 
-export class Runner {
-  constructor(readonly name: string) {
-    for (const key of Object.getOwnPropertyNames(
-      Runner.prototype
-    ) as (keyof Runner)[]) {
-      const descriptor = Object.getOwnPropertyDescriptor(Runner.prototype, key);
-
-      if (descriptor && typeof descriptor.value === 'function') {
-        const value = this[key];
-        if (typeof value === 'function') {
-          // @ts-ignore
-          this[key] = value.bind(this);
-        }
-      }
-    }
-  }
-
-  get realname(): string {
-    return which.sync(this.name);
-  }
-
-  in(names: string[]): boolean {
-    return names.includes(this.name);
-  }
-
-  is(name: string): boolean {
-    return this.name === name;
-  }
-
-  async isInstalled(): Promise<boolean> {
-    try {
-      await this.version();
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  async version(): Promise<string> {
-    return await $exec(`${this.realname} --version`);
-  }
-
-  async help(): Promise<string> {
-    return await $exec(`${this.realname} --help`);
-  }
-
-  async $(args: string | string[], options: ProcessOptions = defaultOptions) {
-    args = Array.isArray(args) ? args : [args];
-
-    return $(this.realname, args, options).result;
-  }
-}
-
-export class PackageManager extends Runner {
-  runCommand(): string {
-    const name = this.name;
-
-    if (this.in(['npm', 'cnpm', 'bun', 'deno'])) {
-      return `${name} run${this.isDeno() ? ' -A' : ''}`;
-    }
-
-    return name;
-  }
-
-  isNpm(): this is PackageManager & { name: 'npm' } {
-    return this.is('npm');
-  }
-
-  isCnpm(): this is PackageManager & { name: 'cnpm' } {
-    return this.is('cnpm');
-  }
-
-  isYarn(): this is PackageManager & { name: 'yarn' } {
-    return this.is('yarn');
-  }
-
-  isPnpm(): this is PackageManager & { name: 'pnpm' } {
-    return this.is('pnpm');
-  }
-
-  isBun(): this is PackageManager & { name: 'bun' } {
-    return this.is('bun');
-  }
-
-  isDeno(): this is PackageManager & { name: 'deno' } {
-    return this.is('deno');
-  }
-
-  async jsr(
-    command: string,
-    args: string[],
-    options: ProcessOptions = defaultOptions
+export class Panam extends Runner {
+  constructor(
+    readonly pm: PackageManager,
+    readonly runtime: Runtime
   ) {
-    if (this.isDeno()) {
-      args = args.map((arg) => this.toJsr(arg));
-
-      switch (command) {
-        case 'add':
-        case 'install':
-        case 'i':
-          return this.$(['add', ...args], options);
-
-        case 'remove':
-        case 'uninstall':
-        case 'r':
-          return this.$(['uninstall', ...args], options);
-
-        case 'run':
-        case 'exec':
-          return this.$(['run', '-A', ...args], options);
-
-        case 'dlx':
-        case 'x':
-          return this.$(['run', '-A', '-r', ...args], options);
-
-        default:
-          return this.$([command, ...args], options);
-      }
-    }
-
-    args = args.map((arg) => this.unJsr(arg));
-
-    return this.$(
-      `${this.in(['pnpm', 'yarn']) ? 'dlx' : 'x'} jsr ${['run', 'exec', 'dlx', 'x'].includes(command) ? 'run' : command} ${args.join(' ')}`,
-      options
-    );
-  }
-
-  isJsr(module: string): boolean {
-    return module.startsWith('jsr:');
-  }
-
-  toJsr(module: string): string {
-    return this.isJsr(module) ? module : `jsr:${module}`;
-  }
-
-  unJsr(module: string): string {
-    return module.replace(/^jsr:/, '');
+    super('panam');
   }
 
   async install(options: ProcessOptions = defaultOptions) {
-    return this.$('install', options);
-  }
-
-  async i(options: ProcessOptions = defaultOptions) {
-    return this.install(options);
+    return this.pm.install(options);
   }
 
   async create(app: string, options: ProcessOptions = defaultOptions) {
-    let args = app.split(/\s+/);
-
-    if (this.isDeno()) {
-      const packageName = args[1];
-      const parts = packageName.split('/', 2);
-      const createCommand = parts[1]
-        ? `npm:${parts[0]}/create-${parts[1]}`
-        : `npm:create-${parts[0]}`;
-
-      args = ['run', '-A', createCommand, ...args.slice(2)];
-    } else {
-      args = ['create', ...args];
-    }
-
-    return this.$(args, options);
+    return this.pm.create(app, options);
   }
 
   async add(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    packages = Array.isArray(packages) ? packages : packages.split(/\s+/);
-
-    if (this.isJsr(packages[0])) {
-      return this.jsrAdd(packages, options);
-    }
-
-    return this.isDeno()
-      ? this.$(
-          [
-            'add',
-            ...packages.map((pkg) =>
-              pkg.startsWith('npm:') ? pkg : `npm:${pkg}`
-            )
-          ],
-          options
-        )
-      : this.$(
-          [
-            this.isNpm() ? 'install' : 'add',
-            ...packages.map((pkg) => pkg.replace(/^npm:/, ''))
-          ],
-          options
-        );
+    return this.pm.add(packages, options);
   }
 
   async remove(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    packages = Array.isArray(packages) ? packages : packages.split(/\s+/);
-
-    if (this.isJsr(packages[0])) {
-      return this.jsrRemove(packages, options);
-    }
-
-    return this.$(
-      [this.isNpm() ? 'uninstall' : 'remove', ...packages],
-      options
-    );
-  }
-
-  async rm(
-    packages: string | string[],
-    options: ProcessOptions = defaultOptions
-  ) {
-    return this.remove(packages, options);
+    return this.pm.remove(packages, options);
   }
 
   async uninstall(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.remove(packages, options);
+    return this.pm.uninstall(packages, options);
   }
 
   async run(script: string, options: ProcessOptions = defaultOptions) {
-    if (this.isJsr(script)) {
-      return this.jsrRun(script, options);
+    const cwd = options?.cwd || defaultWorkingDirectory;
+    const file = join(cwd, script);
+
+    if (existsSync(file)) {
+      return this.runtime.run(file, options);
     }
 
-    const args = script.split(/\s+/);
-
-    return this.in(['pnpm', 'yarn'])
-      ? this.$(args, options)
-      : this.$([this.isDeno() ? 'task' : 'run', ...args], options);
+    return this.pm.run(script, options);
   }
 
   async task(script: string, options: ProcessOptions = defaultOptions) {
-    return this.run(script, options);
+    return this.pm.task(script, options);
   }
 
   async exec(command: string, options: ProcessOptions = defaultOptions) {
-    if (this.isJsr(command)) {
-      return this.jsrExec(command, options);
-    }
-
-    const args = command.split(/\s+/);
-
-    return this.$(
-      [
-        ...(this.isDeno()
-          ? ['run', '-A']
-          : this.in(['pnpm', 'yarn'])
-            ? ['exec']
-            : ['x']),
-        ...args
-      ],
-      options
-    );
+    return this.pm.exec(command, options);
   }
 
   async dlx(binary: string, options: ProcessOptions = defaultOptions) {
-    if (this.isJsr(binary)) {
-      return this.jsrDlx(binary, options);
-    }
-
-    const args = binary.split(/\s+/);
-
-    return this.$(
-      [
-        ...(this.isDeno()
-          ? ['run', '-A', '-r']
-          : this.in(['pnpm', 'yarn'])
-            ? ['dlx']
-            : ['x']),
-        ...args
-      ],
-      options
-    );
+    return this.pm.dlx(binary, options);
   }
 
   async x(executable: string, options: ProcessOptions = defaultOptions) {
-    if (this.isJsr(executable)) {
-      return this.jsrDlx(executable, options);
-    }
-
-    if (this.in(['deno', 'pnpm', 'yarn'])) {
-      try {
-        return this.exec(executable, options);
-      } catch (e: any) {
-        return this.dlx(executable, options);
-      }
-    }
-
-    return this.$(['x', ...executable.split(/\s+/)], options);
+    return this.pm.x(executable, options);
   }
 
   async jsrAdd(packages: string[], options: ProcessOptions = defaultOptions) {
-    return this.jsr('add', packages, options);
+    return this.pm.jsrAdd(packages, options);
   }
 
   async jsrRemove(
     packages: string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.jsr('remove', packages, options);
+    return this.pm.jsrRemove(packages, options);
   }
 
   async jsrRun(script: string, options: ProcessOptions = defaultOptions) {
-    const args = script.split(/\s+/);
-
-    return this.jsr('run', args, options);
+    return this.pm.jsrRun(script, options);
   }
 
   async jsrExec(command: string, options: ProcessOptions = defaultOptions) {
-    const args = command.split(/\s+/);
-
-    return this.jsr('exec', args, options);
+    return this.pm.jsrExec(command, options);
   }
 
   async jsrDlx(binary: string, options: ProcessOptions = defaultOptions) {
-    const args = binary.split(/\s+/);
-
-    return this.jsr('dlx', args, options);
+    return this.pm.jsrDlx(binary, options);
   }
 
   async jsrX(executable: string, options: ProcessOptions = defaultOptions) {
-    const args = executable.split(/\s+/);
-
-    return this.jsr('x', args, options);
+    return this.pm.jsrX(executable, options);
   }
 }
 
-export function pm(name: string): PackageManager {
-  return new PackageManager(name);
+export function panam(pm: PackageManager, runtime: Runtime) {
+  return new Panam(pm, runtime);
 }
 
-const _pm: PackageManager = pm(detectPackageManager().name);
+const _panam = panam(pm, runtime);
 
 const [
   name,
   realname,
   install,
-  i,
   create,
   add,
   remove,
-  rm,
   uninstall,
   run,
+  task,
   exec,
   dlx,
-  x
+  x,
+  jsrAdd,
+  jsrRemove,
+  jsrRun,
+  jsrExec,
+  jsrDlx,
+  jsrX
 ] = [
-  _pm.name,
-  _pm.realname,
-  _pm.install,
-  _pm.i,
-  _pm.create,
-  _pm.add,
-  _pm.remove,
-  _pm.rm,
-  _pm.uninstall,
-  _pm.run,
-  _pm.exec,
-  _pm.dlx,
-  _pm.x
+  _panam.name,
+  _panam.realname,
+  _panam.install,
+  _panam.create,
+  _panam.add,
+  _panam.remove,
+  _panam.uninstall,
+  _panam.run,
+  _panam.exec,
+  _panam.dlx,
+  _panam.x,
+  _panam.task,
+  _panam.jsrAdd,
+  _panam.jsrRemove,
+  _panam.jsrRun,
+  _panam.jsrExec,
+  _panam.jsrDlx,
+  _panam.jsrX
 ];
 
 export {
   name,
   realname,
   install,
-  i,
   create,
   add,
   remove,
-  rm,
   uninstall,
   run,
+  task,
   exec,
   dlx,
-  x
+  x,
+  jsrAdd,
+  jsrRemove,
+  jsrRun,
+  jsrExec,
+  jsrDlx,
+  jsrX
 };
 
-export default _pm;
+export default _panam;
