@@ -1,5 +1,18 @@
 import { Command } from 'commander';
-import { add, create, dlx, exec, install, remove, run, x } from 'panam';
+import {
+  add,
+  create,
+  dlx,
+  exec,
+  install,
+  jsrAdd,
+  jsrRemove,
+  jsrRun,
+  jsrX,
+  remove,
+  run,
+  x
+} from 'panam';
 import { description, name, version } from '../package.json';
 import logger from './logger';
 
@@ -74,6 +87,7 @@ program
 
 program
   .command('run <script>')
+  .alias('task')
   .description(
     "Run a local file or a script defined in the project's package.json."
   )
@@ -139,12 +153,12 @@ program
   .description('Add one or more JSR dependencies to the project.')
   .action(async (packages) => {
     const packagesStr = packages?.join(' ') || '';
-    logger.info(`Adding dependencies "${packagesStr}".`);
+    logger.info(`Adding JSR dependencies "${packagesStr}".`);
     try {
-      await add(packages, defaultOptions);
-      logger.success(`Dependencies "${packagesStr}" added successfully.`);
+      await jsrAdd(packages, defaultOptions);
+      logger.success(`JSR Dependencies "${packagesStr}" added successfully.`);
     } catch (err) {
-      handleError(err, `Failed to add dependencies "${packagesStr}"`);
+      handleError(err, `Failed to add JSR dependencies "${packagesStr}"`);
     }
   });
 
@@ -156,12 +170,12 @@ program
   )
   .action(async (packages) => {
     const packagesStr = packages?.join(' ') || '';
-    logger.info(`Removing dependencies "${packagesStr}".`);
+    logger.info(`Removing JSR dependencies "${packagesStr}".`);
     try {
-      await remove(packages, defaultOptions);
-      logger.success(`Dependencies "${packagesStr}" removed successfully.`);
+      await jsrRemove(packages, defaultOptions);
+      logger.success(`JSR Dependencies "${packagesStr}" removed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to remove dependencies "${packagesStr}"`);
+      handleError(err, `Failed to remove JSR dependencies "${packagesStr}"`);
     }
   });
 
@@ -172,12 +186,12 @@ program
     "Run a JSR script or shell command defined in the project's package.json."
   )
   .action(async (script) => {
-    logger.info(`Running script "${script}"...`);
+    logger.info(`Running JSR script "${script}"...`);
     try {
-      await run(script, defaultOptions);
-      logger.success(`Script "${script}" executed successfully.`);
+      await jsrRun(script, defaultOptions);
+      logger.success(`JSR Script "${script}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute script "${script}"`);
+      handleError(err, `Failed to execute JSR script "${script}"`);
     }
   });
 
@@ -189,12 +203,12 @@ program
   )
   .action(async (pkg, args) => {
     const argsStr = args?.join(' ') || '';
-    logger.info(`Running DLX package "${pkg}" with args: "${argsStr}".`);
+    logger.info(`Running JSR DLX package "${pkg}" with args: "${argsStr}".`);
     try {
-      await dlx([pkg, argsStr].join(' '), defaultOptions);
-      logger.success(`DLX package "${pkg}" executed successfully.`);
+      await jsrX([pkg, argsStr].join(' '), defaultOptions);
+      logger.success(`JSR DLX package "${pkg}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute DLX package "${pkg}"`);
+      handleError(err, `Failed to execute JSR DLX package "${pkg}"`);
     }
   });
 
