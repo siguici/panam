@@ -216,6 +216,10 @@ export class PackageManager extends Runner {
     return module.replace(/^jsr:/, '');
   }
 
+  async init(options: ProcessOptions = defaultOptions) {
+    return this.$('init', options);
+  }
+
   async install(options: ProcessOptions = defaultOptions) {
     return this.$('install', options);
   }

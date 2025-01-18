@@ -28,6 +28,21 @@ const handleError = (err: any, context: string) => {
 };
 
 program
+  .command('init')
+  .description('Initialize a new project.')
+  .action(async () => {
+    logger.info('Initializing project...');
+    try {
+      const result = await install(defaultOptions);
+      result.status
+        ? logger.success('Project initialized successfully.')
+        : logger.error('Project initialization failed');
+    } catch (err) {
+      handleError(err, 'Failed to initialize a new project');
+    }
+  });
+
+program
   .command('install')
   .description('Install all project dependencies.')
   .action(async () => {
