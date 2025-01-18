@@ -6,6 +6,7 @@ import pm, {
   type PackageManagerName
 } from './pm';
 import { type ProcessOptions, defaultOptions } from './process';
+import { bind } from './runner';
 import runtime, {
   Runtime,
   type RuntimeInfo,
@@ -38,6 +39,8 @@ export class Panam extends Runtime {
           : packageManager
       );
     }
+
+    bind(this, Panam.prototype);
   }
 
   async install(options: ProcessOptions = defaultOptions) {

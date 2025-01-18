@@ -8,21 +8,22 @@ import {
 
 export type Version = `${number}.${number}.${number}`;
 
-export class Runner {
-  constructor(readonly name: string) {
-    for (const key of Object.getOwnPropertyNames(
-      Runner.prototype
-    ) as (keyof Runner)[]) {
-      const descriptor = Object.getOwnPropertyDescriptor(Runner.prototype, key);
+export function bind(instance: any, prototype: any) {
+  for (const key of Object.getOwnPropertyNames(prototype)) {
+    const descriptor = Object.getOwnPropertyDescriptor(prototype, key);
 
-      if (descriptor && typeof descriptor.value === 'function') {
-        const value = this[key];
-        if (typeof value === 'function') {
-          // @ts-ignore
-          this[key] = value.bind(this);
-        }
+    if (descriptor && typeof descriptor.value === 'function') {
+      const value = instance[key];
+      if (typeof value === 'function') {
+        instance[key] = value.bind(instance);
       }
     }
+  }
+}
+
+export class Runner {
+  constructor(readonly name: string) {
+    bind(this, Runner.prototype);
   }
 
   get realname(): string {

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type ProcessOptions, defaultOptions } from './process';
-import { Runner, type Version } from './runner';
+import { Runner, type Version, bind } from './runner';
 import { currentRuntime } from './runtime';
 
 export type PackageManagerName =
@@ -111,6 +111,7 @@ export class PackageManager extends Runner {
     }
 
     super(name);
+    bind(this, PackageManager.prototype);
   }
 
   runCommand(): string {
