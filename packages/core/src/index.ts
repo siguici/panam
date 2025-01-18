@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { git } from './git';
 import pm, {
   PackageManager,
   type PackageManagerInfo,
@@ -33,6 +34,7 @@ export { pm, runtime };
 
 export class Panam extends Runtime {
   readonly pm: PackageManager;
+  readonly git = git();
 
   constructor(
     runtime: RuntimeName | RuntimeInfo | Runtime,
@@ -148,6 +150,26 @@ export class Panam extends Runtime {
   async jsrX(executable: string, options: ProcessOptions = defaultOptions) {
     return this.pm.jsrX(executable, options);
   }
+
+  async commit(message: string, options: ProcessOptions = defaultOptions) {
+    return this.git.commit(message, options);
+  }
+
+  async push(
+    remote = 'origin',
+    branch = 'main',
+    options: ProcessOptions = defaultOptions
+  ) {
+    return this.git.push(remote, branch, options);
+  }
+
+  async pull(
+    remote = 'origin',
+    branch = 'main',
+    options: ProcessOptions = defaultOptions
+  ) {
+    return this.git.push(remote, branch, options);
+  }
 }
 
 export function panam(
@@ -178,7 +200,10 @@ const [
   jsrRun,
   jsrExec,
   jsrDlx,
-  jsrX
+  jsrX,
+  commit,
+  push,
+  pull
 ] = [
   _panam.name,
   _panam.realname,
@@ -198,7 +223,10 @@ const [
   _panam.jsrRun,
   _panam.jsrExec,
   _panam.jsrDlx,
-  _panam.jsrX
+  _panam.jsrX,
+  _panam.commit,
+  _panam.push,
+  _panam.pull
 ];
 
 export {
@@ -220,7 +248,10 @@ export {
   jsrRun,
   jsrExec,
   jsrDlx,
-  jsrX
+  jsrX,
+  commit,
+  push,
+  pull
 };
 
 export default _panam;
