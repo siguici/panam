@@ -14,7 +14,6 @@ const handleError = (err: any, context: string) => {
   logger.error(`${context}: ${errorMessage}`);
 };
 
-// `install` command
 program
   .command('install')
   .description('Install all project dependencies.')
@@ -28,7 +27,6 @@ program
     }
   });
 
-// `create` command
 program
   .command('create <cli>')
   .description('Create a new project or package using a template.')
@@ -44,7 +42,6 @@ program
     }
   });
 
-// `add` command
 program
   .command('add <packages...>')
   .alias('use')
@@ -60,7 +57,6 @@ program
     }
   });
 
-// `remove` command
 program
   .command('remove <packages...>')
   .alias('uninstall')
@@ -76,7 +72,6 @@ program
     }
   });
 
-// `run` command
 program
   .command('run <script>')
   .description(
@@ -92,7 +87,6 @@ program
     }
   });
 
-// `exec` command
 program
   .command('exec <command...>')
   .description("Execute a shell command using the project's package manager.")
@@ -107,7 +101,6 @@ program
     }
   });
 
-// `dlx` command
 program
   .command('dlx <package> [args...]')
   .description(
@@ -124,7 +117,6 @@ program
     }
   });
 
-// `x` command
 program
   .command('x <command> [args...]')
   .description(
@@ -138,6 +130,71 @@ program
       logger.success(`Shortcut command "${argsStr}" executed successfully.`);
     } catch (err) {
       handleError(err, `Failed to execute shortcut command "${argsStr}"`);
+    }
+  });
+
+program
+  .command('jsr-add <packages...>')
+  .alias('jsr-use')
+  .description('Add one or more JSR dependencies to the project.')
+  .action(async (packages) => {
+    const packagesStr = packages?.join(' ') || '';
+    logger.info(`Adding dependencies "${packagesStr}".`);
+    try {
+      await add(packages, defaultOptions);
+      logger.success(`Dependencies "${packagesStr}" added successfully.`);
+    } catch (err) {
+      handleError(err, `Failed to add dependencies "${packagesStr}"`);
+    }
+  });
+
+program
+  .command('jsr-remove <packages...>')
+  .alias('jsr-uninstall')
+  .description(
+    'Remove one or more JSR dependencies from the project dependencies.'
+  )
+  .action(async (packages) => {
+    const packagesStr = packages?.join(' ') || '';
+    logger.info(`Removing dependencies "${packagesStr}".`);
+    try {
+      await remove(packages, defaultOptions);
+      logger.success(`Dependencies "${packagesStr}" removed successfully.`);
+    } catch (err) {
+      handleError(err, `Failed to remove dependencies "${packagesStr}"`);
+    }
+  });
+
+program
+  .command('jsr-run <script>')
+  .alias('jsr-exec')
+  .description(
+    "Run a JSR script or shell command defined in the project's package.json."
+  )
+  .action(async (script) => {
+    logger.info(`Running script "${script}"...`);
+    try {
+      await run(script, defaultOptions);
+      logger.success(`Script "${script}" executed successfully.`);
+    } catch (err) {
+      handleError(err, `Failed to execute script "${script}"`);
+    }
+  });
+
+program
+  .command('jsr-x <package> [args...]')
+  .alias('jsr-dlx')
+  .description(
+    'Run a JSR package temporarily without adding it as a project dependency.'
+  )
+  .action(async (pkg, args) => {
+    const argsStr = args?.join(' ') || '';
+    logger.info(`Running DLX package "${pkg}" with args: "${argsStr}".`);
+    try {
+      await dlx([pkg, argsStr].join(' '), defaultOptions);
+      logger.success(`DLX package "${pkg}" executed successfully.`);
+    } catch (err) {
+      handleError(err, `Failed to execute DLX package "${pkg}"`);
     }
   });
 
