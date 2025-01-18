@@ -96,7 +96,7 @@ export class Runtime extends Runner {
 
   async run(file: string, options: ProcessOptions = defaultOptions) {
     if (this.is('deno')) {
-      return this.$(['run', file], options);
+      return this.$(['run', '-A', file], options);
     }
 
     return this.$(file, options);

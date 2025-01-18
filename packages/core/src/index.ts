@@ -1,9 +1,16 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import pm, { type PackageManager } from './pm';
+import pm, {
+  PackageManager,
+  type PackageManagerInfo,
+  type PackageManagerName
+} from './pm';
 import { type ProcessOptions, defaultOptions } from './process';
-import { Runner } from './runner';
-import runtime, { type Runtime } from './runtime';
+import runtime, {
+  Runtime,
+  type RuntimeInfo,
+  type RuntimeName
+} from './runtime';
 
 export { currentRuntime, detectRuntime, Runtime } from './runtime';
 export {
@@ -13,41 +20,49 @@ export {
 } from './pm';
 export { pm, runtime };
 
-export class Panam extends Runner {
+export class Panam extends Runtime {
+  #pm: PackageManager;
+
   constructor(
-    readonly pm: PackageManager,
-    readonly runtime: Runtime
+    runtime: RuntimeName | RuntimeInfo | Runtime,
+    pm: PackageManagerName | PackageManagerInfo | PackageManager
   ) {
-    super('panam');
+    super(typeof runtime === 'object' ? runtime.name : runtime);
+
+    if (pm instanceof PackageManager) {
+      this.#pm = pm;
+    } else {
+      this.#pm = new PackageManager(typeof pm === 'object' ? pm.name : pm);
+    }
   }
 
   async install(options: ProcessOptions = defaultOptions) {
-    return this.pm.install(options);
+    return this.#pm.install(options);
   }
 
   async create(app: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.create(app, options);
+    return this.#pm.create(app, options);
   }
 
   async add(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.pm.add(packages, options);
+    return this.#pm.add(packages, options);
   }
 
   async remove(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.pm.remove(packages, options);
+    return this.#pm.remove(packages, options);
   }
 
   async uninstall(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.pm.uninstall(packages, options);
+    return this.#pm.uninstall(packages, options);
   }
 
   async run(script: string, options: ProcessOptions = defaultOptions) {
@@ -55,61 +70,64 @@ export class Panam extends Runner {
     const file = join(cwd, script);
 
     if (existsSync(file)) {
-      return this.runtime.run(file, options);
+      return super.run(file, options);
     }
 
-    return this.pm.run(script, options);
+    return this.#pm.run(script, options);
   }
 
   async task(script: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.task(script, options);
+    return this.#pm.task(script, options);
   }
 
   async exec(command: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.exec(command, options);
+    return this.#pm.exec(command, options);
   }
 
   async dlx(binary: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.dlx(binary, options);
+    return this.#pm.dlx(binary, options);
   }
 
   async x(executable: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.x(executable, options);
+    return this.#pm.x(executable, options);
   }
 
   async jsrAdd(packages: string[], options: ProcessOptions = defaultOptions) {
-    return this.pm.jsrAdd(packages, options);
+    return this.#pm.jsrAdd(packages, options);
   }
 
   async jsrRemove(
     packages: string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.pm.jsrRemove(packages, options);
+    return this.#pm.jsrRemove(packages, options);
   }
 
   async jsrRun(script: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.jsrRun(script, options);
+    return this.#pm.jsrRun(script, options);
   }
 
   async jsrExec(command: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.jsrExec(command, options);
+    return this.#pm.jsrExec(command, options);
   }
 
   async jsrDlx(binary: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.jsrDlx(binary, options);
+    return this.#pm.jsrDlx(binary, options);
   }
 
   async jsrX(executable: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.jsrX(executable, options);
+    return this.#pm.jsrX(executable, options);
   }
 }
 
-export function panam(pm: PackageManager, runtime: Runtime) {
-  return new Panam(pm, runtime);
+export function panam(
+  runtime: RuntimeName | RuntimeInfo | Runtime,
+  pm: PackageManagerName | PackageManagerInfo | PackageManager
+) {
+  return new Panam(runtime, pm);
 }
 
-const _panam = panam(pm, runtime);
+const _panam = panam(runtime, pm);
 
 const [
   name,
