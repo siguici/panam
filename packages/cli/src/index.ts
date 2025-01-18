@@ -114,18 +114,19 @@ program
   });
 
 program
-  .command('exec <command...>')
+  .command('exec <command> [args...]')
   .description("Execute a shell command using the project's package manager.")
-  .action(async (cmd) => {
-    const commandStr = cmd.join(' ') || '';
-    logger.info(`Executing shell command: "${commandStr}".`);
+  .action(async (cmd, args) => {
+    const argsStr = args?.join(' ') || '';
+    const cmdStr = argsStr ? `${cmd} ${argsStr}` : cmd;
+    logger.info(`Executing shell command: "${cmdStr}".`);
     try {
-      const result = await exec(commandStr, defaultOptions);
+      const result = await exec(cmdStr, defaultOptions);
       result.status
-        ? logger.success(`Shell command "${commandStr}" executed successfully.`)
-        : logger.error(`Shell command "${commandStr}" execution failed.`);
+        ? logger.success(`Shell command "${cmdStr}" executed successfully.`)
+        : logger.error(`Shell command "${cmdStr}" execution failed.`);
     } catch (err) {
-      handleError(err, `Failed to execute shell command "${commandStr}"`);
+      handleError(err, `Failed to execute shell command "${cmdStr}"`);
     }
   });
 
