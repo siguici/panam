@@ -21,48 +21,52 @@ export {
 export { pm, runtime };
 
 export class Panam extends Runtime {
-  #pm: PackageManager;
+  readonly pm: PackageManager;
 
   constructor(
     runtime: RuntimeName | RuntimeInfo | Runtime,
-    pm: PackageManagerName | PackageManagerInfo | PackageManager
+    packageManager: PackageManagerName | PackageManagerInfo | PackageManager
   ) {
     super(typeof runtime === 'object' ? runtime.name : runtime);
 
-    if (pm instanceof PackageManager) {
-      this.#pm = pm;
+    if (packageManager instanceof PackageManager) {
+      this.pm = packageManager;
     } else {
-      this.#pm = new PackageManager(typeof pm === 'object' ? pm.name : pm);
+      this.pm = new PackageManager(
+        typeof packageManager === 'object'
+          ? packageManager.name
+          : packageManager
+      );
     }
   }
 
   async install(options: ProcessOptions = defaultOptions) {
-    return this.#pm.install(options);
+    return this.pm.install(options);
   }
 
   async create(app: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.create(app, options);
+    return this.pm.create(app, options);
   }
 
   async add(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.#pm.add(packages, options);
+    return this.pm.add(packages, options);
   }
 
   async remove(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.#pm.remove(packages, options);
+    return this.pm.remove(packages, options);
   }
 
   async uninstall(
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.#pm.uninstall(packages, options);
+    return this.pm.uninstall(packages, options);
   }
 
   async run(script: string, options: ProcessOptions = defaultOptions) {
@@ -73,50 +77,50 @@ export class Panam extends Runtime {
       return super.run(file, options);
     }
 
-    return this.#pm.run(script, options);
+    return this.pm.run(script, options);
   }
 
   async task(script: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.task(script, options);
+    return this.pm.task(script, options);
   }
 
   async exec(command: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.exec(command, options);
+    return this.pm.exec(command, options);
   }
 
   async dlx(binary: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.dlx(binary, options);
+    return this.pm.dlx(binary, options);
   }
 
   async x(executable: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.x(executable, options);
+    return this.pm.x(executable, options);
   }
 
   async jsrAdd(packages: string[], options: ProcessOptions = defaultOptions) {
-    return this.#pm.jsrAdd(packages, options);
+    return this.pm.jsrAdd(packages, options);
   }
 
   async jsrRemove(
     packages: string[],
     options: ProcessOptions = defaultOptions
   ) {
-    return this.#pm.jsrRemove(packages, options);
+    return this.pm.jsrRemove(packages, options);
   }
 
   async jsrRun(script: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.jsrRun(script, options);
+    return this.pm.jsrRun(script, options);
   }
 
   async jsrExec(command: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.jsrExec(command, options);
+    return this.pm.jsrExec(command, options);
   }
 
   async jsrDlx(binary: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.jsrDlx(binary, options);
+    return this.pm.jsrDlx(binary, options);
   }
 
   async jsrX(executable: string, options: ProcessOptions = defaultOptions) {
-    return this.#pm.jsrX(executable, options);
+    return this.pm.jsrX(executable, options);
   }
 }
 
