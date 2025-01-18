@@ -12,10 +12,14 @@ export interface RuntimeInfo {
 
 export const defaultRuntimeInfo: RuntimeInfo = {
   name: 'node',
-  version: undefined
+  version: getRuntimeVersion('node')
 };
 
-export function currentRuntime(cwd = process.cwd()): RuntimeInfo {
+export function whichRuntime(cwd = process.cwd()): RuntimeInfo {
+  return preferredRuntime(cwd) ?? detectedRuntime() ?? defaultRuntimeInfo;
+}
+
+export function detectedRuntime(): RuntimeInfo | undefined {
   let name: RuntimeName;
   //@ts-ignore
   if (typeof Bun !== 'undefined') {
@@ -36,7 +40,7 @@ export function currentRuntime(cwd = process.cwd()): RuntimeInfo {
     };
   }
 
-  return detectRuntime(cwd);
+  return undefined;
 }
 
 export function isRuntime(name: string): name is RuntimeName {
@@ -59,13 +63,13 @@ export function getRuntimeVersion(runtime: string): Version | undefined {
   }
 }
 
-export function detectRuntime(cwd = process.cwd()): RuntimeInfo {
+export function preferredRuntime(cwd = process.cwd()): RuntimeInfo | undefined {
   let engines: Record<string, string> = {};
   const packageJson = join(cwd, 'package.json');
 
   if (existsSync(packageJson)) {
     try {
-      engines = JSON.parse(readFileSync(packageJson, 'utf-8')).engines;
+      engines = JSON.parse(readFileSync(packageJson, 'utf-8')).engines || {};
     } catch {}
   }
 
@@ -79,10 +83,7 @@ export function detectRuntime(cwd = process.cwd()): RuntimeInfo {
     }
   }
 
-  return {
-    name: 'node',
-    version: getRuntimeVersion('node')
-  };
+  return undefined;
 }
 
 export class Runtime extends Runner {
@@ -108,7 +109,7 @@ export function runtime(name: string): Runtime {
   return new Runtime(name);
 }
 
-const _runtime = runtime(currentRuntime().name);
+const _runtime = runtime(whichRuntime().name);
 
 const [run] = [_runtime.run];
 

@@ -1,20 +1,20 @@
 import path from 'node:path';
 import process from 'node:process';
 import { test } from '@japa/runner';
-import panam, { currentRuntime, currentPackageManager } from 'panam';
+import panam, { whichRuntime, whichPackageManager } from 'panam';
 
-const currentPmName = currentPackageManager().name;
-const currentRuntimeName = currentRuntime().name;
+const currentPm = whichPackageManager().name;
+const currentRuntime = whichRuntime().name;
 
 delete process.env.npm_config_user_agent;
 
 const fixtureDir = (pmName: string) => path.join('tests/fixtures', pmName);
 
-test(`pm and runtime should be ${currentPmName} and ${currentRuntime}`, ({
+test(`pm and runtime should be ${currentPm} and ${currentRuntime}`, ({
   assert
 }) => {
-  assert.equal(panam.name, currentRuntimeName);
-  assert.equal(panam.pm.name, currentPmName);
+  assert.equal(panam.name, currentRuntime);
+  assert.equal(panam.pm.name, currentPm);
 });
 
 test('engines should be installed', async ({ assert }) => {

@@ -13,10 +13,16 @@ import runtime, {
   type RuntimeName
 } from './runtime';
 
-export { currentRuntime, detectRuntime, Runtime } from './runtime';
 export {
-  currentPackageManager,
-  detectPackageManager,
+  whichRuntime,
+  preferredRuntime,
+  detectedRuntime,
+  Runtime
+} from './runtime';
+export {
+  whichPackageManager,
+  detectedPackageManager,
+  preferredPackageManager,
   PackageManager
 } from './pm';
 export { pm, runtime };

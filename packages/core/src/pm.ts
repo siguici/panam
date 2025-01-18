@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type ProcessOptions, defaultOptions } from './process';
 import { Runner, type Version, bind } from './runner';
-import { currentRuntime } from './runtime';
+import { whichRuntime } from './runtime';
 
 export type PackageManagerName =
   | 'npm'
@@ -19,16 +19,42 @@ export interface PackageManagerInfo {
 }
 
 export const defaultPackageManagerInfo: PackageManagerInfo = {
-  name: 'npm',
-  version: undefined,
-  lockfile: undefined
+  name: 'npm'
 };
 
 export function isPackageManager(name: string): name is PackageManagerName {
   return ['npm', 'cnpm', 'yarn', 'pnpm', 'bun', 'deno'].includes(name);
 }
 
-export function detectPackageManager(cwd = process.cwd()): PackageManagerInfo {
+export function whichPackageManager(cwd = process.cwd()): PackageManagerInfo {
+  return (
+    preferredPackageManager(cwd) ??
+    detectedPackageManager(cwd) ??
+    defaultPackageManagerInfo
+  );
+}
+
+export function detectedPackageManager(
+  cwd = process.cwd()
+): PackageManagerInfo | undefined {
+  const userAgent = process.env.npm_config_user_agent;
+
+  if (!userAgent) {
+    const name = whichRuntime(cwd).name;
+
+    if (isPackageManager(name)) {
+      return { name };
+    }
+
+    return undefined;
+  }
+
+  return parseUserAgent(userAgent);
+}
+
+export function preferredPackageManager(
+  cwd = process.cwd()
+): PackageManagerInfo | undefined {
   let name = '';
   let version: Version | undefined;
   let lockfile: string | undefined = '';
@@ -63,15 +89,13 @@ export function detectPackageManager(cwd = process.cwd()): PackageManagerInfo {
     }
   }
 
-  name = name || currentRuntime(cwd).name;
-  name = name === 'node' ? 'npm' : name;
   lockfile = lockfile || undefined;
 
   if (isPackageManager(name)) {
     return { name, version, lockfile };
   }
 
-  return { name: 'npm', version, lockfile: undefined };
+  return undefined;
 }
 
 export function parsePackageManager(
@@ -80,16 +104,6 @@ export function parsePackageManager(
   const [name, version] = input.split('@', 2) as [PackageManagerName, Version];
 
   return [name, version];
-}
-
-export function currentPackageManager(cwd = process.cwd()): PackageManagerInfo {
-  const userAgent = process.env.npm_config_user_agent;
-
-  if (!userAgent) {
-    return detectPackageManager(cwd);
-  }
-
-  return parseUserAgent(userAgent);
 }
 
 export function parseUserAgent(userAgent: string): PackageManagerInfo {
@@ -384,7 +398,7 @@ export function pm(name: string): PackageManager {
   return new PackageManager(name);
 }
 
-const _pm: PackageManager = pm(currentPackageManager().name);
+const _pm: PackageManager = pm(whichPackageManager().name);
 
 const [
   name,
