@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { type ProcessOptions, defaultOptions } from './process';
 import { Runner, type Version, bind } from './runner';
 import { whichRuntime } from './runtime';
+import { findUpSync } from './utils';
 
 export type PackageManagerName =
   | 'npm'
@@ -81,9 +82,10 @@ export function preferredPackageManager(
 
   if (!name) {
     for (const { lockfile: pmLockfile, name: pmName } of lockfileDetection) {
-      if (existsSync(`${cwd}/${pmLockfile}`)) {
+      const lockfilePath = findUpSync(pmLockfile, { cwd });
+      if (lockfilePath) {
         name = pmName;
-        lockfile = pmLockfile;
+        lockfile = lockfilePath;
         break;
       }
     }
