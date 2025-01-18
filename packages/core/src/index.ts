@@ -4,7 +4,14 @@ import pm, { type PackageManager } from './pm';
 import { type ProcessOptions, defaultOptions } from './process';
 import { Runner } from './runner';
 import runtime, { type Runtime } from './runtime';
-import { defaultWorkingDirectory } from './utils';
+
+export { currentRuntime, detectRuntime, Runtime } from './runtime';
+export {
+  currentPackageManager,
+  detectPackageManager,
+  PackageManager
+} from './pm';
+export { pm, runtime };
 
 export class Panam extends Runner {
   constructor(
@@ -44,7 +51,7 @@ export class Panam extends Runner {
   }
 
   async run(script: string, options: ProcessOptions = defaultOptions) {
-    const cwd = options?.cwd || defaultWorkingDirectory;
+    const cwd = options?.cwd || process.cwd();
     const file = join(cwd, script);
 
     if (existsSync(file)) {

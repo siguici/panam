@@ -6,6 +6,8 @@ import {
   defaultOptions
 } from './process';
 
+export type Version = `${number}.${number}.${number}`;
+
 export class Runner {
   constructor(readonly name: string) {
     for (const key of Object.getOwnPropertyNames(
@@ -44,8 +46,8 @@ export class Runner {
     }
   }
 
-  async version(): Promise<string> {
-    return await $exec(`${this.realname} --version`);
+  async version(): Promise<Version> {
+    return (await $exec(`${this.realname} --version`)) as Version;
   }
 
   async help(): Promise<string> {

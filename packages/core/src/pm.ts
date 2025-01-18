@@ -1,6 +1,108 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { type ProcessOptions, defaultOptions } from './process';
-import { Runner } from './runner';
-import { getPackageManagerInfo, isPackageManager } from './utils';
+import { Runner, type Version } from './runner';
+import { currentRuntime } from './runtime';
+
+export type PackageManagerName =
+  | 'npm'
+  | 'cnpm'
+  | 'yarn'
+  | 'pnpm'
+  | 'bun'
+  | 'deno';
+
+export interface PackageManagerInfo {
+  name: PackageManagerName;
+  version?: Version;
+  lockfile?: string;
+}
+
+export const defaultPackageManagerInfo: PackageManagerInfo = {
+  name: 'npm',
+  version: undefined,
+  lockfile: undefined
+};
+
+export function isPackageManager(name: string): name is PackageManagerName {
+  return ['npm', 'cnpm', 'yarn', 'pnpm', 'bun', 'deno'].includes(name);
+}
+
+export function detectPackageManager(cwd = process.cwd()): PackageManagerInfo {
+  let name = '';
+  let version: Version | undefined;
+  let lockfile: string | undefined = '';
+  const packageJson = join(cwd, 'package.json');
+
+  if (existsSync(packageJson)) {
+    try {
+      const pkgManager = JSON.parse(
+        readFileSync(packageJson, 'utf-8')
+      ).packageManager;
+      if (pkgManager) {
+        [name, version] = parsePackageManager(pkgManager);
+      }
+    } catch {}
+  }
+
+  const lockfileDetection = [
+    { lockfile: 'pnpm-lock.yaml', name: 'pnpm' },
+    { lockfile: 'yarn.lock', name: 'yarn' },
+    { lockfile: 'package-lock.json', name: 'npm' },
+    { lockfile: 'bun.lockb', name: 'bun' },
+    { lockfile: 'deno.lock', name: 'deno' }
+  ];
+
+  if (!name) {
+    for (const { lockfile: pmLockfile, name: pmName } of lockfileDetection) {
+      if (existsSync(`${cwd}/${pmLockfile}`)) {
+        name = pmName;
+        lockfile = pmLockfile;
+        break;
+      }
+    }
+  }
+
+  name = name || currentRuntime(cwd).name;
+  name = name === 'node' ? 'npm' : name;
+  lockfile = lockfile || undefined;
+
+  if (isPackageManager(name)) {
+    return { name, version, lockfile };
+  }
+
+  return { name: 'npm', version, lockfile: undefined };
+}
+
+export function parsePackageManager(
+  input: string
+): [PackageManagerName, Version] {
+  const [name, version] = input.split('@', 2) as [PackageManagerName, Version];
+
+  return [name, version];
+}
+
+export function currentPackageManager(cwd = process.cwd()): PackageManagerInfo {
+  const userAgent = process.env.npm_config_user_agent;
+
+  if (!userAgent) {
+    return detectPackageManager(cwd);
+  }
+
+  return parseUserAgent(userAgent);
+}
+
+export function parseUserAgent(userAgent: string): PackageManagerInfo {
+  const pmSpec = userAgent.split(' ')[0];
+  const separatorPos = pmSpec.lastIndexOf('/');
+  const name = pmSpec.substring(0, separatorPos);
+  const version = pmSpec.substring(separatorPos + 1) as Version;
+
+  return {
+    name: name === 'npminstall' ? 'cnpm' : (name as PackageManagerName),
+    version
+  };
+}
 
 export class PackageManager extends Runner {
   constructor(name: string) {
@@ -281,7 +383,7 @@ export function pm(name: string): PackageManager {
   return new PackageManager(name);
 }
 
-const _pm: PackageManager = pm(getPackageManagerInfo().name);
+const _pm: PackageManager = pm(currentPackageManager().name);
 
 const [
   name,
