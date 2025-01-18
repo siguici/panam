@@ -86,18 +86,20 @@ program
   });
 
 program
-  .command('run <script>')
+  .command('run <script> [args...]')
   .alias('task')
   .description(
     "Run a local file or a script defined in the project's package.json."
   )
-  .action(async (script) => {
-    logger.info(`Running script "${script}"...`);
+  .action(async (script, args) => {
+    const argsStr = args?.join(' ') || '';
+    const scriptWithArgs = argsStr ? `${script} ${argsStr}` : script;
+    logger.info(`Running script "${scriptWithArgs}".`);
     try {
-      await run(script, defaultOptions);
-      logger.success(`Script "${script}" executed successfully.`);
+      await run(scriptWithArgs, defaultOptions);
+      logger.success(`Script "${scriptWithArgs}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute script "${script}"`);
+      handleError(err, `Failed to execute script "${scriptWithArgs}"`);
     }
   });
 
@@ -180,18 +182,20 @@ program
   });
 
 program
-  .command('jsr-run <script>')
+  .command('jsr-run <script> [args...]')
   .alias('jsr-exec')
   .description(
     "Run a JSR script or shell command defined in the project's package.json."
   )
-  .action(async (script) => {
-    logger.info(`Running JSR script "${script}"...`);
+  .action(async (script, args) => {
+    const argsStr = args?.join(' ') || '';
+    const scriptWithArgs = argsStr ? `${script} ${argsStr}` : script;
+    logger.info(`Running JSR script "${scriptWithArgs}".`);
     try {
-      await jsrRun(script, defaultOptions);
-      logger.success(`JSR Script "${script}" executed successfully.`);
+      await jsrRun(`${scriptWithArgs}`, defaultOptions);
+      logger.success(`JSR Script "${scriptWithArgs}" executed successfully.`);
     } catch (err) {
-      handleError(err, `Failed to execute JSR script "${script}"`);
+      handleError(err, `Failed to execute JSR script "${scriptWithArgs}"`);
     }
   });
 
