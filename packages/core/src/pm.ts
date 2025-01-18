@@ -178,9 +178,7 @@ export class PackageManager extends Runner {
 
     const args = script.split(/\s+/);
 
-    return this.in(['pnpm', 'yarn'])
-      ? this.$(args, options)
-      : this.$([this.isDeno() ? 'task' : 'run', ...args], options);
+    return this.$([this.isDeno() ? 'task' : 'run', ...args], options);
   }
 
   async task(script: string, options: ProcessOptions = defaultOptions) {
