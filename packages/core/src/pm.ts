@@ -219,7 +219,7 @@ export class PackageManager extends Runner {
   }
 
   async create(cli: string, options: ProcessOptions = defaultOptions) {
-    let args = cli.split(/\s+/);
+    let args = this.parseArgs(cli);
 
     if (this.isDeno()) {
       const packageName = args[1];
@@ -240,7 +240,7 @@ export class PackageManager extends Runner {
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    packages = Array.isArray(packages) ? packages : packages.split(/\s+/);
+    packages = this.parseArgs(packages);
 
     if (this.isJsr(packages[0])) {
       return this.jsrAdd(packages, options);
@@ -269,7 +269,7 @@ export class PackageManager extends Runner {
     packages: string | string[],
     options: ProcessOptions = defaultOptions
   ) {
-    packages = Array.isArray(packages) ? packages : packages.split(/\s+/);
+    packages = this.parseArgs(packages);
 
     if (this.isJsr(packages[0])) {
       return this.jsrRemove(packages, options);
@@ -293,7 +293,7 @@ export class PackageManager extends Runner {
       return this.jsrRun(script, options);
     }
 
-    const args = script.split(/\s+/);
+    const args = this.parseArgs(script);
 
     return this.$([this.isDeno() ? 'task' : 'run', ...args], options);
   }
@@ -307,7 +307,7 @@ export class PackageManager extends Runner {
       return this.jsrExec(command, options);
     }
 
-    const args = command.split(/\s+/);
+    const args = this.parseArgs(command);
 
     return this.$(
       [
@@ -327,7 +327,7 @@ export class PackageManager extends Runner {
       return this.jsrDlx(binary, options);
     }
 
-    const args = binary.split(/\s+/);
+    const args = this.parseArgs(binary);
 
     return this.$(
       [
@@ -355,7 +355,7 @@ export class PackageManager extends Runner {
       }
     }
 
-    return this.$(['x', ...executable.split(/\s+/)], options);
+    return this.$(['x', ...this.parseArgs(executable)], options);
   }
 
   async jsrAdd(packages: string[], options: ProcessOptions = defaultOptions) {
@@ -370,25 +370,25 @@ export class PackageManager extends Runner {
   }
 
   async jsrRun(script: string, options: ProcessOptions = defaultOptions) {
-    const args = script.split(/\s+/);
+    const args = this.parseArgs(script);
 
     return this.jsr('run', args, options);
   }
 
   async jsrExec(command: string, options: ProcessOptions = defaultOptions) {
-    const args = command.split(/\s+/);
+    const args = this.parseArgs(command);
 
     return this.jsr('exec', args, options);
   }
 
   async jsrDlx(binary: string, options: ProcessOptions = defaultOptions) {
-    const args = binary.split(/\s+/);
+    const args = this.parseArgs(binary);
 
     return this.jsr('dlx', args, options);
   }
 
   async jsrX(executable: string, options: ProcessOptions = defaultOptions) {
-    const args = executable.split(/\s+/);
+    const args = this.parseArgs(executable);
 
     return this.jsr('x', args, options);
   }

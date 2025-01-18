@@ -56,8 +56,12 @@ export class Runner {
   }
 
   async $(args: string | string[], options: ProcessOptions = defaultOptions) {
-    args = Array.isArray(args) ? args : [args];
+    args = this.parseArgs(args);
 
     return $(this.realname, args, options).result;
+  }
+
+  parseArgs(args: string | string[]): string[] {
+    return Array.isArray(args) ? args : args.split(/\s+/);
   }
 }
