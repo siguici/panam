@@ -44,8 +44,8 @@ export class Panam extends Runtime {
     return this.pm.install(options);
   }
 
-  async create(app: string, options: ProcessOptions = defaultOptions) {
-    return this.pm.create(app, options);
+  async create(cli: string, options: ProcessOptions = defaultOptions) {
+    return this.pm.create(cli, options);
   }
 
   async add(

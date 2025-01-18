@@ -203,8 +203,8 @@ export class PackageManager extends Runner {
     return this.$('install', options);
   }
 
-  async create(app: string, options: ProcessOptions = defaultOptions) {
-    let args = app.split(/\s+/);
+  async create(cli: string, options: ProcessOptions = defaultOptions) {
+    let args = cli.split(/\s+/);
 
     if (this.isDeno()) {
       const packageName = args[1];
