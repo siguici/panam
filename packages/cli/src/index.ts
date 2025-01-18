@@ -151,7 +151,7 @@ program
 
 program
   .command('jsr-add <packages...>')
-  .alias('jsr-use')
+  .alias('jsr:add')
   .description('Add one or more JSR dependencies to the project.')
   .action(async (packages) => {
     const packagesStr = packages?.join(' ') || '';
@@ -166,7 +166,7 @@ program
 
 program
   .command('jsr-remove <packages...>')
-  .alias('jsr-uninstall')
+  .alias('jsr:remove')
   .description(
     'Remove one or more JSR dependencies from the project dependencies.'
   )
@@ -183,7 +183,7 @@ program
 
 program
   .command('jsr-run <script> [args...]')
-  .alias('jsr-exec')
+  .alias('jsr:run')
   .description(
     "Run a JSR script or shell command defined in the project's package.json."
   )
@@ -201,7 +201,7 @@ program
 
 program
   .command('jsr-x <package> [args...]')
-  .alias('jsr-dlx')
+  .alias('jsr:x')
   .description(
     'Run a JSR package temporarily without adding it as a project dependency.'
   )
