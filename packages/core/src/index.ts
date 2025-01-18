@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { git } from './git';
+import git, { type Git } from './git';
 import pm, {
   PackageManager,
   type PackageManagerInfo,
@@ -30,11 +30,11 @@ export {
   preferredPackageManager,
   PackageManager
 } from './pm';
-export { pm, runtime };
+export { pm, runtime, git };
 
 export class Panam extends Runtime {
   readonly pm: PackageManager;
-  readonly git = git();
+  readonly git: Git = git;
 
   constructor(
     runtime: RuntimeName | RuntimeInfo | Runtime,

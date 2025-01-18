@@ -31,6 +31,12 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
+    "./git": {
+      "types": "./dist/git.d.ts",
+      "import": "./dist/git.js",
+      "require": "./dist/git.cjs",
+      "default": "./dist/git.js"
+    },
     "./pm": {
       "types": "./dist/pm.d.ts",
       "import": "./dist/pm.js",

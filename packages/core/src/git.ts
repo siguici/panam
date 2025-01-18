@@ -71,7 +71,7 @@ export function git(): Git {
   return new Git();
 }
 
-const _git = git();
+const _git: Git = git();
 
 const [init, status, add, commit, push, pull, branch, checkout, merge] = [
   _git.init,
@@ -86,3 +86,5 @@ const [init, status, add, commit, push, pull, branch, checkout, merge] = [
 ];
 
 export { init, status, add, commit, push, pull, branch, checkout, merge };
+
+export default _git;
