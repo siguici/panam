@@ -7,6 +7,11 @@ const program = new Command();
 
 program.name(name).description(description).version(version);
 
+const handleError = (err: any, context: string) => {
+  const errorMessage = err?.message || 'An unexpected error occurred.';
+  logger.error(`${context}: ${errorMessage}`);
+};
+
 // `create` command
 program
   .command('create <cli>')
@@ -19,7 +24,7 @@ program
         `Project initialized successfully with template "${cli}".`
       );
     } catch (err) {
-      logger.error(`Failed to initialize project with template "${cli}"`);
+      handleError(err, `Failed to initialize project with template "${cli}"`);
     }
   });
 
@@ -33,7 +38,7 @@ program
       await install({ daemon: false });
       logger.success('All dependencies installed successfully.');
     } catch (err) {
-      logger.error('Dependency installation failed');
+      handleError(err, 'Dependency installation failed');
     }
   });
 
@@ -47,7 +52,7 @@ program
       await add(pkg, { daemon: false });
       logger.success(`Dependency "${pkg}" added successfully.`);
     } catch (err) {
-      logger.error(`Failed to add dependency "${pkg}"`);
+      handleError(err, `Failed to add dependency "${pkg}"`);
     }
   });
 
@@ -61,7 +66,7 @@ program
       await remove(pkg, { daemon: false });
       logger.success(`Dependency "${pkg}" removed successfully.`);
     } catch (err) {
-      logger.error(`Failed to remove dependency "${pkg}"`);
+      handleError(err, `Failed to remove dependency "${pkg}"`);
     }
   });
 
@@ -75,7 +80,7 @@ program
       await run(script, { daemon: false });
       logger.success(`Script "${script}" executed successfully.`);
     } catch (err) {
-      logger.error(`Failed to execute script "${script}"`);
+      handleError(err, `Failed to execute script "${script}"`);
     }
   });
 
@@ -90,7 +95,7 @@ program
       await exec(commandStr, { daemon: false });
       logger.success(`Shell command "${commandStr}" executed successfully.`);
     } catch (err) {
-      logger.error(`Failed to execute shell command "${commandStr}"`);
+      handleError(err, `Failed to execute shell command "${commandStr}"`);
     }
   });
 
@@ -107,7 +112,7 @@ program
       await dlx([pkg, argsStr].join(' '), { daemon: false });
       logger.success(`DLX package "${pkg}" executed successfully.`);
     } catch (err) {
-      logger.error(`Failed to execute DLX package "${pkg}"`);
+      handleError(err, `Failed to execute DLX package "${pkg}"`);
     }
   });
 
@@ -124,7 +129,7 @@ program
       await x(commandStr, { daemon: false });
       logger.success(`Shortcut command "${commandStr}" executed successfully.`);
     } catch (err) {
-      logger.error(`Failed to execute shortcut command "${commandStr}"`);
+      handleError(err, `Failed to execute shortcut command "${commandStr}"`);
     }
   });
 
