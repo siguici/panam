@@ -71,20 +71,20 @@ export class Panam extends Runtime {
     tool: T | ToolConstructor<T>,
     name: K
   ): Used<K, typeof this, T>;
-  use(arg1: any, arg2?: any) {
-    if (typeof arg1 === 'function') {
-      arg1 = new arg1(arg2);
+  use(tool: any, name?: any) {
+    if (typeof tool === 'function') {
+      tool = new tool(name);
     }
 
-    const name = arg1.name;
+    const toolName = tool.name;
 
-    if (!name) {
+    if (!(name || toolName)) {
       throw new Error('Tool must have a name');
     }
 
-    this.tools[name] = arg1;
+    this.tools[name ?? toolName] = tool;
 
-    if (arg2) {
+    if (name) {
       return this;
     }
 
@@ -93,7 +93,7 @@ export class Panam extends Runtime {
         if (this.tools[alias]) {
           throw new Error(`Tool alias "${alias}" already exists.`);
         }
-        this.tools[alias] = arg1;
+        this.tools[alias] = tool;
 
         return this;
       }
