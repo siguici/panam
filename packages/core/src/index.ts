@@ -33,7 +33,10 @@ export {
 export { pm, runtime, git };
 
 type ToolConstructor<T extends Tool> = new (name: string) => T;
-type UsedAs<K extends string, T extends Tool = Tool> = {
+type Used<K extends string, P extends Panam, T extends Tool> = P & {
+  tools: P['tools'] & { [Key in K]: T };
+};
+type UsedAs<K extends string, T extends Tool> = {
   as: <P extends Panam>(
     alias: K
   ) => P & { tools: P['tools'] & { [Key in K]: T } };
@@ -65,15 +68,11 @@ export class Panam extends Runtime {
 
   use<K extends string, T extends Tool>(tool: T): UsedAs<K, T>;
   use<K extends string, T extends Tool>(
-    tool: ToolConstructor<T>,
+    tool: T | ToolConstructor<T>,
     name: K
-  ): UsedAs<K, T>;
+  ): Used<K, typeof this, T>;
   use(arg1: any, arg2?: any) {
-    if (arg2 !== undefined) {
-      if (typeof arg1 !== 'function') {
-        throw new Error('Tool must be a function');
-      }
-
+    if (typeof arg1 === 'function') {
       arg1 = new arg1(arg2);
     }
 
@@ -84,6 +83,10 @@ export class Panam extends Runtime {
     }
 
     this.tools[name] = arg1;
+
+    if (arg2) {
+      return this;
+    }
 
     return {
       as: (alias: string) => {
