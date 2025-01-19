@@ -32,9 +32,17 @@ export {
 } from './pm';
 export { pm, runtime, git };
 
+type ToolConstructor<T extends Tool> = new (name: string) => T;
+type UsedAs<K extends string, T extends Tool = Tool> = {
+  as: <P extends Panam>(
+    alias: K
+  ) => P & { tools: P['tools'] & { [Key in K]: T } };
+};
+
 export class Panam extends Runtime {
   readonly pm: PackageManager;
   readonly git: Git = git;
+  readonly tools: Record<string, Tool> = {};
 
   constructor(
     runtime: RuntimeName | RuntimeInfo | Runtime,
@@ -53,6 +61,40 @@ export class Panam extends Runtime {
     }
 
     bind(this, Panam.prototype);
+  }
+
+  use<K extends string, T extends Tool>(tool: T): UsedAs<K, T>;
+  use<K extends string, T extends Tool>(
+    tool: ToolConstructor<T>,
+    name: K
+  ): UsedAs<K, T>;
+  use(arg1: any, arg2?: any) {
+    if (arg2 !== undefined) {
+      if (typeof arg1 !== 'function') {
+        throw new Error('Tool must be a function');
+      }
+
+      arg1 = new arg1(arg2);
+    }
+
+    const name = arg1.name;
+
+    if (!name) {
+      throw new Error('Tool must have a name');
+    }
+
+    this.tools[name] = arg1;
+
+    return {
+      as: (alias: string) => {
+        if (this.tools[alias]) {
+          throw new Error(`Tool alias "${alias}" already exists.`);
+        }
+        this.tools[alias] = arg1;
+
+        return this;
+      }
+    };
   }
 
   async init(

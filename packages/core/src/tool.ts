@@ -30,6 +30,10 @@ export class Tool {
     bind(this, Tool.prototype);
   }
 
+  get name(): string {
+    return this._name;
+  }
+
   get realname(): string {
     return which.sync(this._name);
   }
