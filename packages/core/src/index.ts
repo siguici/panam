@@ -33,10 +33,14 @@ export {
 export { pm, runtime, git };
 
 type ToolConstructor<T extends Tool> = new (name: string) => T;
-type Used<K extends string, P extends Panam, T extends Tool> = P & {
+type Used<
+  P extends Panam,
+  T extends Tool,
+  K extends T['name'] = T['name']
+> = P & {
   tools: P['tools'] & { [Key in K]: T };
 };
-type UsedAs<K extends string, T extends Tool> = {
+type UsedAs<T extends Tool, K extends T['name'] = T['name']> = {
   as: <P extends Panam>(
     alias: K
   ) => P & { tools: P['tools'] & { [Key in K]: T } };
@@ -66,11 +70,11 @@ export class Panam extends Runtime {
     bind(this, Panam.prototype);
   }
 
-  use<K extends string, T extends Tool>(tool: T): UsedAs<K, T>;
-  use<K extends string, T extends Tool>(
+  use<T extends Tool, K extends T['name'] = T['name']>(tool: T): UsedAs<T, K>;
+  use<T extends Tool, K extends T['name']>(
     tool: T | ToolConstructor<T>,
     name: K
-  ): Used<K, typeof this, T>;
+  ): Used<typeof this, T, K>;
   use(tool: any, name?: any) {
     if (typeof tool === 'function') {
       tool = new tool(name);
