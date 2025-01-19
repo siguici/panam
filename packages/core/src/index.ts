@@ -46,10 +46,14 @@ type UsedAs<T extends Tool, K extends T['name'] = T['name']> = {
   ) => P & { tools: P['tools'] & { [Key in K]: T } };
 };
 
+export interface Tools {
+  [key: string]: Tool;
+}
+
 export class Panam extends Runtime {
   readonly pm: PackageManager;
   readonly git: Git = git;
-  readonly tools: Record<string, Tool> = {};
+  readonly tools: Tools = {};
 
   constructor(
     runtime: RuntimeName | RuntimeInfo | Runtime,
