@@ -5,8 +5,8 @@ import {
   type ProcessResult,
   defaultOptions
 } from './process';
-import { Runner, type Version, bind } from './runner';
 import { whichRuntime } from './runtime';
+import { Tool, type Version, bind } from './tool';
 import { findUpSync } from './utils';
 
 export type PackageManagerName =
@@ -124,7 +124,7 @@ export function parseUserAgent(userAgent: string): PackageManagerInfo {
   };
 }
 
-export class PackageManager extends Runner {
+export class PackageManager extends Tool {
   constructor(name: string) {
     if (!isPackageManager(name)) {
       name = 'npm';

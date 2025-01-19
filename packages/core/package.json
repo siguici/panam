@@ -49,17 +49,17 @@
       "require": "./dist/process.cjs",
       "default": "./dist/process.js"
     },
-    "./runner": {
-      "types": "./dist/runner.d.ts",
-      "import": "./dist/runner.js",
-      "require": "./dist/runner.cjs",
-      "default": "./dist/runner.js"
-    },
     "./runtime": {
       "types": "./dist/runtime.d.ts",
       "import": "./dist/runtime.js",
       "require": "./dist/runtime.cjs",
       "default": "./dist/runtime.js"
+    },
+    "./tool": {
+      "types": "./dist/tool.d.ts",
+      "import": "./dist/tool.js",
+      "require": "./dist/tool.cjs",
+      "default": "./dist/tool.js"
     },
     "./utils": {
       "types": "./dist/utils.d.ts",

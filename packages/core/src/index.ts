@@ -11,12 +11,12 @@ import {
   type ProcessResult,
   defaultOptions
 } from './process';
-import { bind } from './runner';
 import runtime, {
   Runtime,
   type RuntimeInfo,
   type RuntimeName
 } from './runtime';
+import { type Tool, bind } from './tool';
 
 export {
   whichRuntime,

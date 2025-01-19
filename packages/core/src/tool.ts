@@ -21,13 +21,13 @@ export function bind(instance: any, prototype: any) {
   }
 }
 
-export class Runner {
+export class Tool {
   protected _name: string;
 
   constructor(name: string) {
     this._name = name;
 
-    bind(this, Runner.prototype);
+    bind(this, Tool.prototype);
   }
 
   get realname(): string {

@@ -11,8 +11,8 @@ export default defineConfig((options) => {
       'src/index.ts',
       'src/pm.ts',
       'src/process.ts',
-      'src/runner.ts',
       'src/runtime.ts',
+      'src/tool.ts',
       'src/utils.ts'
     ]
   };

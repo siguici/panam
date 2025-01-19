@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type ProcessOptions, defaultOptions } from './process';
-import { Runner, type Version, bind } from './runner';
+import { Tool, type Version, bind } from './tool';
 
 export type RuntimeName = 'node' | 'bun' | 'deno';
 
@@ -86,7 +86,7 @@ export function preferredRuntime(cwd = process.cwd()): RuntimeInfo | undefined {
   return undefined;
 }
 
-export class Runtime extends Runner {
+export class Runtime extends Tool {
   constructor(name: string) {
     if (!isRuntime(name)) {
       name = 'node';

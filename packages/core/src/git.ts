@@ -1,7 +1,7 @@
 import { type ProcessOptions, defaultOptions } from './process';
-import { Runner, bind } from './runner';
+import { Tool, bind } from './tool';
 
-export class Git extends Runner {
+export class Git extends Tool {
   constructor() {
     super('git');
 
