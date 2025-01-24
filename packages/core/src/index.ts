@@ -16,7 +16,7 @@ import runtime, {
   type RuntimeInfo,
   type RuntimeName
 } from './runtime';
-import { type Tool, bind } from './tool';
+import { Tool, bind } from './tool';
 
 export {
   whichRuntime,
@@ -106,6 +106,26 @@ export class Panam extends Runtime {
         return this;
       }
     };
+  }
+
+  async which(
+    tool: 'pm' | 'runtime' | PackageManagerName | RuntimeName | 'git' = 'pm'
+  ): Promise<string> {
+    if (tool === 'pm') {
+      return this.pm.realname;
+    }
+
+    if (tool === 'runtime') {
+      return this.realname;
+    }
+
+    const _tool = new Tool(tool);
+
+    if (await _tool.isInstalled()) {
+      return _tool.realname;
+    }
+
+    throw new Error(`${tool} is not installed`);
   }
 
   async init(
@@ -253,6 +273,7 @@ const _panam = panam(runtime, pm);
 const [
   name,
   realname,
+  which,
   init,
   install,
   create,
@@ -280,6 +301,7 @@ const [
 ] = [
   _panam.name,
   _panam.realname,
+  _panam.which,
   _panam.init,
   _panam.install,
   _panam.create,
@@ -309,6 +331,7 @@ const [
 export {
   name,
   realname,
+  which,
   init,
   install,
   create,

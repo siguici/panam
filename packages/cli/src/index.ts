@@ -12,6 +12,7 @@ import {
   jsrX,
   remove,
   run,
+  which,
   x
 } from 'panam';
 import type { PackageManagerName } from 'panam/pm';
@@ -28,6 +29,19 @@ const handleError = (err: any, context: string) => {
   const errorMessage = err?.message || 'An unexpected error occurred.';
   logger.error(`${context}: ${errorMessage}`);
 };
+
+program
+  .command('which [tool]')
+  .description('Check which tool is used')
+  .action(async (tool) => {
+    try {
+      const whichTool = await which(tool);
+
+      console.log(whichTool);
+    } catch (err) {
+      handleError(err, `Failed to check which ${tool} is used`);
+    }
+  });
 
 program
   .command('init [package-manager]')
