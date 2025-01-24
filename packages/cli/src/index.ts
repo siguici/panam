@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import {
+  type SupportedTools,
   add,
   create,
   dlx,
@@ -31,15 +32,30 @@ const handleError = (err: any, context: string) => {
 };
 
 program
-  .command('which [tool]')
-  .description('Check which tool is used')
-  .action(async (tool) => {
-    try {
-      const whichTool = await which(tool);
+  .command('which [tool] [tools...]')
+  .description('Check which tools are used')
+  .action(async (tool: SupportedTools, tools: SupportedTools[]) => {
+    const toolsStr = [
+      [tool, ...tools.slice(0, -1)].join(', '),
+      ...tools.slice(-1)
+    ].join(' and ');
 
-      console.log(whichTool);
+    try {
+      let whichTools = await (tools
+        ? which(tool, ...tools)
+        : tool
+          ? which(tool)
+          : which());
+
+      whichTools = Array.isArray(whichTools) ? whichTools : [whichTools];
+      for (const whichTool of whichTools) {
+        console.log(whichTool);
+      }
     } catch (err) {
-      handleError(err, `Failed to check which ${tool} is used`);
+      handleError(
+        err,
+        `Failed to check which ${toolsStr || 'tools'} ${tools.length || !tool ? 'are' : 'is'} used`
+      );
     }
   });
 

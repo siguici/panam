@@ -46,6 +46,13 @@ type UsedAs<T extends Tool, K extends T['name'] = T['name']> = {
   ) => P & { tools: P['tools'] & { [Key in K]: T } };
 };
 
+export type SupportedTools =
+  | 'pm'
+  | 'runtime'
+  | PackageManagerName
+  | RuntimeName
+  | 'git';
+
 export interface Tools {
   [key: string]: Tool;
 }
@@ -108,9 +115,32 @@ export class Panam extends Runtime {
     };
   }
 
-  async which(
-    tool: 'pm' | 'runtime' | PackageManagerName | RuntimeName | 'git' = 'pm'
-  ): Promise<string> {
+  async which(): Promise<string[]>;
+  async which<T extends SupportedTools>(tool: T): Promise<string>;
+  async which<T extends SupportedTools>(
+    tool: T,
+    ...tools: T[]
+  ): Promise<string[]>;
+  async which<T extends SupportedTools>(
+    tool?: T,
+    ...tools: T[]
+  ): Promise<string[] | string> {
+    if (tool === undefined) {
+      return this.which('pm', 'runtime', 'git');
+    }
+
+    if (tools.length) {
+      tools = [tool, ...tools];
+
+      const _tools: string[] = [];
+
+      for (const _tool of tools) {
+        _tools.push(await this.which(_tool));
+      }
+
+      return _tools;
+    }
+
     if (tool === 'pm') {
       return this.pm.realname;
     }
