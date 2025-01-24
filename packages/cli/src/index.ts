@@ -112,7 +112,7 @@ program
 
 program
   .command('add <packages...>')
-  .alias('use')
+  .alias('a')
   .description('Add one or more dependencies to the project.')
   .action(async (packages) => {
     const packagesStr = packages?.join(' ') || '';
