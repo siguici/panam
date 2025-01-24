@@ -64,6 +64,10 @@ export class Tool {
   }
 
   async $(args: string | string[], options: ProcessOptions = defaultOptions) {
+    if (!(await this.isInstalled())) {
+      throw new Error(`${this.name} is not installed.`);
+    }
+
     args = this.parseArgs(args);
 
     return $(this.realname, args, options).result;
