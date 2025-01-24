@@ -79,6 +79,7 @@ program
 
 program
   .command('install')
+  .alias('i')
   .description('Install all project dependencies.')
   .action(async () => {
     logger.info('Installing project dependencies...');
