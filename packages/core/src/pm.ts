@@ -4,7 +4,7 @@ import {
   type ProcessOptions,
   type ProcessResult,
   defaultOptions
-} from './process';
+} from './executor';
 import { whichRuntime } from './runtime';
 import { Tool, type Version, bind } from './tool';
 import { findUpSync } from './utils';

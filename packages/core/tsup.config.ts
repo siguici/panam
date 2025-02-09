@@ -7,10 +7,10 @@ export default defineConfig((options) => {
     minify: !options.watch,
     dts: true,
     entry: [
+      'src/executor.ts',
       'src/git.ts',
       'src/index.ts',
       'src/pm.ts',
-      'src/process.ts',
       'src/runtime.ts',
       'src/tool.ts',
       'src/utils.ts'

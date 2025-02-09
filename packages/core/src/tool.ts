@@ -4,7 +4,7 @@ import {
   exec as $exec,
   type ProcessOptions,
   defaultOptions
-} from './process';
+} from './executor';
 
 export type Version = `${number}.${number}.${number}`;
 

@@ -1,4 +1,4 @@
-import { type ProcessOptions, defaultOptions } from './process';
+import { type ProcessOptions, defaultOptions } from './executor';
 import { Tool, bind } from './tool';
 
 export class Git extends Tool {

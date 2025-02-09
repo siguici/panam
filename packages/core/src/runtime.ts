@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { type ProcessOptions, defaultOptions } from './process';
+import { type ProcessOptions, defaultOptions } from './executor';
 import { Tool, type Version, bind } from './tool';
 
 export type RuntimeName = 'node' | 'bun' | 'deno';

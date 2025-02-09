@@ -1,16 +1,16 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import {
+  type ProcessOptions,
+  type ProcessResult,
+  defaultOptions
+} from './executor';
 import git, { type Git } from './git';
 import pm, {
   PackageManager,
   type PackageManagerInfo,
   type PackageManagerName
 } from './pm';
-import {
-  type ProcessOptions,
-  type ProcessResult,
-  defaultOptions
-} from './process';
 import runtime, {
   Runtime,
   type RuntimeInfo,
