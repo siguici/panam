@@ -53,9 +53,9 @@
   "bugs": "https://github.com/siguici/panam/issues",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@changesets/cli": "^2.27.12",
-    "gitmoji-cli": "^9.5.0",
+    "@changesets/cli": "^2.29.4",
+    "gitmoji-cli": "^9.7.0",
     "husky": "^9.1.7",
-    "pkg-pr-new": "^0.0.39"
+    "pkg-pr-new": "^0.0.50"
   }
 }
