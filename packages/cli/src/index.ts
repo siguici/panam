@@ -1,3 +1,4 @@
+import process from 'node:process';
 import { Command } from 'commander';
 import {
   type SupportedTools,
@@ -27,8 +28,12 @@ program.name(name).description(description).version(version);
 const defaultOptions = { daemon: false };
 
 const handleError = (err: any, context: string) => {
-  const errorMessage = err?.message || 'An unexpected error occurred.';
-  logger.error(`${context}: ${errorMessage}`);
+  error(`${context}: ${err?.message || 'An unexpected error occurred.'}`);
+};
+
+const error = (message: string) => {
+  logger.error(message);
+  process.exit(1);
 };
 
 program
@@ -71,7 +76,7 @@ program
 
       result.status
         ? logger.success('Project initialized successfully.')
-        : logger.error('Project initialization failed');
+        : error('Project initialization failed');
     } catch (err) {
       handleError(err, 'Failed to initialize a new project');
     }
@@ -87,7 +92,7 @@ program
       const result = await install(defaultOptions);
       result.status
         ? logger.success('All dependencies installed successfully.')
-        : logger.error('Dependency installation failed');
+        : error('Dependency installation failed');
     } catch (err) {
       handleError(err, 'Failed to install dependencies');
     }
@@ -104,7 +109,7 @@ program
       const result = await create(cliStr, defaultOptions);
       result.status
         ? logger.success(`Project initialized successfully with "${cliStr}".`)
-        : logger.error(`Project initialization failed with "${cliStr}".`);
+        : error(`Project initialization failed with "${cliStr}".`);
     } catch (err) {
       handleError(err, `Failed to initialize project with "${cliStr}"`);
     }
@@ -121,7 +126,7 @@ program
       const result = await add(packages, defaultOptions);
       result.status
         ? logger.success(`Dependencies "${packagesStr}" added successfully.`)
-        : logger.error(`Dependencies "${packagesStr}" addition failed.`);
+        : error(`Dependencies "${packagesStr}" addition failed.`);
     } catch (err) {
       handleError(err, `Failed to add dependencies "${packagesStr}"`);
     }
@@ -138,7 +143,7 @@ program
       const result = await remove(packages, defaultOptions);
       result.status
         ? logger.success(`Dependencies "${packagesStr}" removed successfully.`)
-        : logger.error(`Dependencies "${packagesStr}" removal failed.`);
+        : error(`Dependencies "${packagesStr}" removal failed.`);
     } catch (err) {
       handleError(err, `Failed to remove dependencies "${packagesStr}"`);
     }
@@ -158,7 +163,7 @@ program
       const result = await run(scriptStr, defaultOptions);
       result.status
         ? logger.success(`Script "${scriptStr}" executed successfully.`)
-        : logger.error(`Script "${scriptStr}" execution failed.`);
+        : error(`Script "${scriptStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute script "${scriptStr}"`);
     }
@@ -175,7 +180,7 @@ program
       const result = await exec(cmdStr, defaultOptions);
       result.status
         ? logger.success(`Shell command "${cmdStr}" executed successfully.`)
-        : logger.error(`Shell command "${cmdStr}" execution failed.`);
+        : error(`Shell command "${cmdStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute shell command "${cmdStr}"`);
     }
@@ -194,7 +199,7 @@ program
       const result = await dlx(binStr, defaultOptions);
       result.status
         ? logger.success(`DLX binary "${binStr}" executed successfully.`)
-        : logger.error(`DLX binary "${binStr}" execution failed.`);
+        : error(`DLX binary "${binStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute DLX binary "${binStr}"`);
     }
@@ -213,7 +218,7 @@ program
       const result = await x(execStr, defaultOptions);
       result.status
         ? logger.success(`Shortcut command "${execStr}" executed successfully.`)
-        : logger.error(`Shortcut command "${execStr}" execution failed.`);
+        : error(`Shortcut command "${execStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute shortcut command "${execStr}"`);
     }
@@ -232,7 +237,7 @@ program
         ? logger.success(
             `JSR Dependencies "${packagesStr}" added successfully.`
           )
-        : logger.error(`JSR Dependencies "${packagesStr}" addition failed.`);
+        : error(`JSR Dependencies "${packagesStr}" addition failed.`);
     } catch (err) {
       handleError(err, `Failed to add JSR dependencies "${packagesStr}"`);
     }
@@ -253,7 +258,7 @@ program
         ? logger.success(
             `JSR Dependencies "${packagesStr}" removed successfully.`
           )
-        : logger.error(`JSR Dependencies "${packagesStr}" removal failed.`);
+        : error(`JSR Dependencies "${packagesStr}" removal failed.`);
     } catch (err) {
       handleError(err, `Failed to remove JSR dependencies "${packagesStr}"`);
     }
@@ -273,7 +278,7 @@ program
       const result = await jsrRun(scriptStr, defaultOptions);
       result.status
         ? logger.success(`JSR Script "${scriptStr}" executed successfully.`)
-        : logger.error(`JSR Script "${scriptStr}" execution failed.`);
+        : error(`JSR Script "${scriptStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute JSR script "${scriptStr}"`);
     }
@@ -293,7 +298,7 @@ program
       const result = await jsrX(binStr, defaultOptions);
       result.status
         ? logger.success(`JSR DLX binary "${binStr}" executed successfully.`)
-        : logger.error(`JSR DLX binary "${binStr}" execution failed.`);
+        : error(`JSR DLX binary "${binStr}" execution failed.`);
     } catch (err) {
       handleError(err, `Failed to execute JSR DLX binary "${binStr}"`);
     }
