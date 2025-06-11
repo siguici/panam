@@ -90,14 +90,14 @@
   ],
   "dependencies": {
     "cross-spawn": "^7.0.6",
-    "tsx": "^4.19.4",
+    "tsx": "^4.20.1",
     "which": "^5.0.0"
   },
   "devDependencies": {
     "@japa/assert": "^4.0.1",
     "@japa/runner": "^4.2.0",
     "@types/cross-spawn": "^6.0.6",
-    "@types/node": "^22.15.21",
+    "@types/node": "^24.0.0",
     "@types/which": "^3.0.4",
     "@types/which-pm-runs": "^1.0.2",
     "tsup": "^8.5.0",

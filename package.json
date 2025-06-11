@@ -56,6 +56,6 @@
     "@changesets/cli": "^2.29.4",
     "gitmoji-cli": "^9.7.0",
     "husky": "^9.1.7",
-    "pkg-pr-new": "^0.0.50"
+    "pkg-pr-new": "^0.0.51"
   }
 }
