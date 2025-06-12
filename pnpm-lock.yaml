@@ -38,9 +38,6 @@ importers:
       panam:
         specifier: workspace:*
         version: link:../core
-      tsx:
-        specifier: ^4.20.1
-        version: 4.20.1
     devDependencies:
       '@japa/assert':
         specifier: ^4.0.1
@@ -54,6 +51,9 @@ importers:
       tsup:
         specifier: ^8.5.0
         version: 8.5.0(tsx@4.20.1)(typescript@5.8.3)
+      tsx:
+        specifier: ^4.20.1
+        version: 4.20.1
       typescript:
         specifier: ^5.8.3
         version: 5.8.3

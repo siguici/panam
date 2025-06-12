@@ -63,14 +63,14 @@
     "commander": "^14.0.0",
     "figures": "^6.1.0",
     "kleur": "^4.1.5",
-    "panam": "workspace:*",
-    "tsx": "^4.20.1"
+    "panam": "workspace:*"
   },
   "devDependencies": {
     "@japa/assert": "^4.0.1",
     "@japa/runner": "^4.2.0",
     "@types/node": "^24.0.0",
     "tsup": "^8.5.0",
+    "tsx": "^4.20.1",
     "typescript": "^5.8.3"
   }
 }
