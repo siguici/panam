@@ -20,6 +20,9 @@ jobs:
       - name: 🚚 Checkout repository
         uses: actions/checkout@v6
 
+      - name: Install Panam
+        run: pnpm i -g panam-cli
+
       - name: Setup Test Environment
         uses: siguici/setup-js@v1
         with:

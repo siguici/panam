@@ -35,6 +35,9 @@ jobs:
         with:
           version: ${{ matrix.pnpm }}
 
+      - name: Install Panam
+        run: pnpm i -g panam-cli
+
       - name: Install Dependencies
         run: make install
 

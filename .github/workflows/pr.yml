@@ -27,4 +27,7 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: "pnpm"
 
+      - name: Install Panam
+        run: pnpm i -g panam-cli
+
       - run: make pr-release
