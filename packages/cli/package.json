@@ -8,7 +8,7 @@
     "check": "tsc --noEmit",
     "build": "tsup-node --env.NODE_ENV production",
     "start": "tsup-node --env.NODE_ENV development --watch",
-    "test": "pnm run dist/cli.js tsx bin/test.ts",
+    "test": "dist/cli.js tsx bin/test.ts",
     "tsx": "tsx"
   },
   "author": "Sigui Kessé Emmanuel <siguici@proton.me>",
