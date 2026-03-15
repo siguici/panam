@@ -23,5 +23,5 @@ jobs:
       - name: Setup Test Environment
         uses: siguici/setup-js@v1
         with:
-          rutime: ${{ matrix.runtime }}
+          runtime: ${{ matrix.runtime }}
           scripts: build,test
